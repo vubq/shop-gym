@@ -1,0 +1,49 @@
+package com.web.shopgym.entities;
+
+import com.web.shopgym.enums.EStatus;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
+import org.hibernate.annotations.UuidGenerator;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldNameConstants
+@Entity
+@Table(name="products")
+public class Product {
+
+    @Id
+    @UuidGenerator
+    @Column(name = "id")
+    private String id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "image")
+    private String image;
+
+    @Column(name = "price")
+    private Double price;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "brand_id", nullable = false)
+    private Brand brand;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private EStatus status;
+}
