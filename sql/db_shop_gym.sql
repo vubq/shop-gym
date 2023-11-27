@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 26, 2023 at 06:58 PM
+-- Generation Time: Nov 27, 2023 at 07:55 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -83,8 +83,8 @@ CREATE TABLE `colors` (
 --
 
 INSERT INTO `colors` (`description`, `id`, `name`, `status`) VALUES
-('Màu vàng', '6f5cd090-dd9e-4d3b-a742-2fb2613812f2', 'Đỏ', 'ACTIVE'),
-('Màu đỏ', '94338044-a7a7-4f8a-bcbf-80948a856f1f', 'Cam', 'ACTIVE'),
+('Màu vàng', '6f5cd090-dd9e-4d3b-a742-2fb2613812f2', 'Vàng', 'ACTIVE'),
+('Màu cam', '94338044-a7a7-4f8a-bcbf-80948a856f1f', 'Cam', 'ACTIVE'),
 ('Màu đỏ', 'f8e15fdc-3a60-48ee-a346-e98eeee9e955', 'Đỏ', 'ACTIVE');
 
 -- --------------------------------------------------------
