@@ -19,10 +19,10 @@ import AdminLayout from '@/layouts/admin/index.vue';
 export default class extends Vue {
   private user = JSON.parse(localStorage.getItem('user') as any);
 
-  private created() {
-    console.log(this.$store.state.auth);
+  // private created() {
+  //   console.log(this.$store.state.auth);
     
-  }
+  // }
 }
 </script>
 

@@ -26,10 +26,10 @@ export default class extends Vue {
   private isCollapse = false;
   private i = 0;
 
-  private created() {
-    console.log(this.$route)
-    console.log(this.$router)
-  }
+  // private created() {
+  //   console.log(this.$route)
+  //   console.log(this.$router)
+  // }
 
   private changeIsCollapse() {
     this.isCollapse = !this.isCollapse;

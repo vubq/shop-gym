@@ -34,9 +34,9 @@ export default class extends Vue {
   @Prop() private isCollapse!: boolean;
   private route = (this.$router.options.routes as any).find((e: any) => e.path === '/admin').children;
 
-  private created() {
-    console.log(this.route);
-  }
+  // private created() {
+  //   console.log(this.route);
+  // }
 
   private linkTo(path: string, name: string) {
     if(this.$route.path != '/admin/' + path) {

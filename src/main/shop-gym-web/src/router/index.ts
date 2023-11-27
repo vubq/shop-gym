@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import LoginPage from '@/views/login/index.vue';
 import ADProductPage from '@/views/admin/product/index.vue';
+import ADProductDetailPage from '@/views/admin/product/product-detail/index.vue';
 import AdminLayout from '@/layouts/admin/index.vue';
 
 Vue.use(VueRouter);
@@ -43,6 +44,15 @@ const routes: Array<RouteConfig> = [
         component: ADProductPage,
         meta: {
           title: 'Quản lý sản phẩm',
+          icon: 'el-icon-user-solid',
+        }
+      },
+      {
+        path: 'product-detail',
+        name: 'ADProductDetailPage',
+        component: ADProductDetailPage,
+        meta: {
+          title: 'Sản phẩm',
           icon: 'el-icon-user-solid',
         }
       },
