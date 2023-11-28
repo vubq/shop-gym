@@ -72,7 +72,7 @@ public class WebSecurityConfig {
         http.cors(httpSecurityCorsConfigurer -> {
             httpSecurityCorsConfigurer.configurationSource(request -> {
                 var cors = new CorsConfiguration();
-                cors.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:8082"));
+                cors.setAllowedOrigins(List.of("http://localhost:3000"));
                 cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
                 cors.setAllowedHeaders(List.of("*"));
                 return cors;
