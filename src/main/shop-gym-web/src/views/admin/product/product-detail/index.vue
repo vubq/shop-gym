@@ -69,6 +69,9 @@ import { getAllColor } from '@/services/color/colorService'
 import { getAllSize } from '@/services/size/sizeService'
 import { getAllMaterial } from '@/services/material/materialService'
 import ProductDetailAttribute from './ProductDetailAttribute.vue';
+import { SizeModel } from '@/models/SizeModel';
+import { ColorModel } from '@/models/ColorModel';
+import { MaterialModel } from '@/models/MaterialModel';
 
 @Component({
   name: 'ProductDetail',
@@ -77,24 +80,15 @@ import ProductDetailAttribute from './ProductDetailAttribute.vue';
   }
 })
 export default class extends Vue {
-  private listColor = [];
-  private listSize = [];
-  private listMaterial = [];
+  private listColor: ColorModel[] = [];
+  private listSize: SizeModel[] = [];
+  private listMaterial: MaterialModel[] = [];
 
-  private selectedColor = [];
-  private selectedSize = [];
-  private selectedMaterial = [];
+  private selectedColor: any[] = [];
+  private selectedSize: any[] = [];
+  private selectedMaterial: any[] = [];
 
-  private listProductDetailAttribute = [
-    {
-      code: '',
-      size: '',
-      color: '',
-      material: '',
-      quantity: '',
-      price: ''
-    }
-  ];
+  private listProductDetailAttribute: any[] = [];
 
   private created() {
 
@@ -118,47 +112,50 @@ export default class extends Vue {
   }
 
   private selectAttribute() {
-    const list = [];
+    const list: any[] = [];
 
     if(this.selectedSize.length > 0 && this.selectedColor.length > 0 && this.selectedMaterial.length > 0) {
       const totalNumberProduct = this.selectedSize.length * this.selectedColor.length * this.selectedMaterial.length;
-      console.log('Tổng: ' + totalNumberProduct)
-      const attribute1 = totalNumberProduct / this.listSize.length
-      console.log('Tổng x: ' + attribute1)
+
       let iSize = 0;
-      let count = 1;
-      for(let i = 1; i <= totalNumberProduct; i++) {
-        console.log('----')
-        console.log(count)
-        if(count - 1 === attribute1) {
-          iSize++;
-          count = 1;
+      let iColor = 0;
+      let iMaterial = 0;
+
+      for(let i = 0; i < totalNumberProduct; i++) {
+
+        let maxSize = 1 * this.selectedColor.length * this.selectedMaterial.length; 
+        let maxColor = 1 * this.selectedSize.length * this.selectedMaterial.length;
+
+        // Size
+        let totalSize = list.filter((e: any) => e.size === this.selectedSize[iSize]).length;
+        let size = totalSize < totalNumberProduct / this.selectedSize.length ? this.selectedSize[iSize] : this.selectedSize[++iSize];
+
+        console.log(i + ": iColor: " + iColor + ", totalSize: " + totalSize);
+        // Color
+        if(iColor === this.selectedColor.length - 1 && totalSize === maxSize) {
+          iColor = 0;
         }
-        count++;
-        console.log(iSize)
-        console.log('----')
-        // if(this.listProductDetailAttribute.length === 0) {
-        //   this.listProductDetailAttribute.push({
-        //     code: '',
-        //     size: this.listSize[iSize],
-        //     color: '',
-        //     material: '',
-        //     quantity: '',
-        //     price: ''
-        //   })
-        // }
+        let totalColor = list.filter((e: any) => e.size === size && e.color === this.selectedColor[iColor] ).length;
+        let color = totalColor === maxSize / this.selectedColor.length ? this.selectedColor[++iColor] : this.selectedColor[iColor];
+
+        // Material
+        if(iMaterial === this.selectedMaterial.length - 1) {
+          iMaterial = 0;
+        }
+        let totalMaterial = list.filter((e: any) => e.size === size && e.color === color && e.material === this.selectedMaterial[iMaterial]).length;
+        let material = totalMaterial === 1 ? this.selectedMaterial[++iMaterial] : this.selectedMaterial[iMaterial];
+
         list.push({
           code: '',
-          size: this.listSize[iSize].id,
-          color: '',
-          material: '',
-          quantity: '',
-          price: ''
+          size: size,
+          color: color,
+          material: material,
+          quantity: 0,
+          price: 0
         })
       }
     }
     this.listProductDetailAttribute = list;
-    // console.log(this.listProductDetailAttribute)
   }
 }
 </script>

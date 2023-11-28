@@ -17,7 +17,7 @@
       </el-col>
 
       <el-col :span="3">
-        <el-select v-model="value" placeholder="Màu">
+        <el-select v-model="product.color" placeholder="Màu">
           <el-option
             v-for="color in listColorFilter"
             :key="color.id"
@@ -28,7 +28,7 @@
       </el-col>
 
       <el-col :span="3">
-        <el-select v-model="value" placeholder="Chất liệu">
+        <el-select v-model="product.material" placeholder="Chất liệu">
           <el-option
             v-for="material in listMaterialFilter"
             :key="material.id"
@@ -39,7 +39,7 @@
       </el-col>
 
       <el-col :span="3">
-        <el-input-number v-model="num" :min="1" style="width: 100%;"></el-input-number>
+        <el-input-number :min="1" style="width: 100%;"></el-input-number>
       </el-col>
 
       <el-col :span="4">
