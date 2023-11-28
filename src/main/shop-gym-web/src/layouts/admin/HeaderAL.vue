@@ -31,6 +31,7 @@ export default class extends Vue {
   display: flex;
   align-items: center;
   transition: width 0.28s;
+  z-index: 9999;
 
   .isCollapseIcon {
     font-size: 1.5rem;

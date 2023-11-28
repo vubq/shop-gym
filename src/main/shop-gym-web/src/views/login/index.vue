@@ -8,13 +8,13 @@
         <el-form status-icon ref="ruleForm" label-width="" class="demo-ruleForm">
           <el-form-item prop="username">
             <template slot="label">
-              <span style="font-weight: bold;">Tài Khoản</span>
+              <span>Tài Khoản</span>
             </template>
             <el-input v-model="username" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item prop="password">
             <template slot="label">
-              <span style="font-weight: bold;">Mật Khẩu</span>
+              <span>Mật Khẩu</span>
             </template>
             <el-input type="password" v-model="password" autocomplete="off"></el-input>
           </el-form-item>
@@ -62,7 +62,7 @@ export default class extends Vue {
 
 <style lang='scss' scoped>
 .loginPage {
-  background-color: #C1B1A9;
+  background-color: #AFEEEE;
   min-width: 100vh;
   min-height: 100vh;
 
