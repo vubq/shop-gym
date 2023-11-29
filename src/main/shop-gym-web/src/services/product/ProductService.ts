@@ -7,3 +7,11 @@ export const getAllBySearchCriteria = (params: any) =>
     params
   })
 
+export const createProduct = (data: any) =>
+  request({
+    url: '/product',
+    method: 'post',
+    data
+  })
+
+

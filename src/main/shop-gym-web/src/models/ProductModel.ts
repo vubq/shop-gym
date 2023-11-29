@@ -1,5 +1,5 @@
-import { BrandModel } from "./BrandModel";
-import { CategoryModel } from "./CategoryModel";
+import { ImageModel } from "./ImageModel";
+import { ProductDetailModel } from "./ProductDetailModel";
 
 export class ProductModel {
   public id?: string;
@@ -8,11 +8,11 @@ export class ProductModel {
   public status?: string;
   public image?: string;
   public price?: number;
-  public brand?: BrandModel;
-  public category?: CategoryModel;
-
   public brandId?: string;
   public categoryId?: string;
+
+  public images?: ImageModel[];
+  public productDetails?: ProductDetailModel[];
 
   constructor(init?: Partial<ProductModel>) {
     Object.assign(this, init)

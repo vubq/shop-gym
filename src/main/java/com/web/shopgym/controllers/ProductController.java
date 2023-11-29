@@ -65,6 +65,18 @@ public class ProductController {
 
         Product product = this.productService.save(productSave);
 
+        List<Image> images = new ArrayList<>();
+
+        dto.getImages().forEach((image) -> {
+            Image imageSave = Image.builder()
+                    .url(image.getUrl())
+                    .type(EImageType.PRODUCT)
+                    .publicId(image.getPublicId())
+                    .secondaryId(product.getId())
+                    .build();
+            images.add(imageSave);
+        });
+
         if(product == null) return new ResponseEntity<>("ERROR", HttpStatus.OK);
 
         dto.getProductDetails().forEach((productDetailDto) -> {
@@ -79,15 +91,14 @@ public class ProductController {
                     .status(EStatus.ACTIVE).build();
             ProductDetail productDetail = this.productDetailService.save(productDetailSave);
 
-            List<Image> images = new ArrayList<>();
-            productDetailDto.getImageFiles().forEach((imageFile) -> {
-                Map imageMap = this.cloudinaryService.upload(imageFile);
-                Image image = Image.builder()
-                        .url(String.valueOf(imageMap.get("url")))
+            productDetailDto.getImages().forEach((image) -> {
+                Image imageSave = Image.builder()
+                        .url(image.getUrl())
                         .type(EImageType.PRODUCT_DETAIL)
-                        .publicId(String.valueOf(imageMap.get("public_id")))
+                        .publicId(image.getPublicId())
                         .secondaryId(productDetail.getId())
                         .build();
+                images.add(imageSave);
             });
 
             this.imageService.saveAll(images);

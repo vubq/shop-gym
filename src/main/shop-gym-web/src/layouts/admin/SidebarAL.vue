@@ -6,19 +6,19 @@
     </div>
     <el-menu
       class='el-menu-vertical-demo sidebar'
-      background-color='#545c64'
+      background-color='rgb(48, 65, 86)'
       text-color='#fff'
+      active-text-color="#ffd04b"
     >
-      <div v-for="(r, i) in route" :key="i" >
-          <el-menu-item 
-            @click="linkTo(r.path, r.name)" 
-            :index="(i + 1).toString()" 
-            :class="$route.path === '/admin/' + r.path ? 'isActive' : ''"
-          >
-            <i :class='r.meta.icon'></i>
-            <span v-if="!isCollapse">{{ r.meta.title }}</span>
-          </el-menu-item>
-      </div>
+      <el-menu-item 
+        v-for="(r, i) in route" :key="i"
+        @click="linkTo(r.path, r.name)" 
+        :index="(i + 1).toString()" 
+        :class="$route.path === '/admin/' + r.path ? 'isActive' : ''"
+      >
+        <i :class='r.meta.icon'></i>
+        <span v-if="!isCollapse">{{ r.meta.title }}</span>
+      </el-menu-item>
     </el-menu>
   </el-aside>
 </template>
@@ -52,7 +52,11 @@ export default class extends Vue {
 .aside{
   transition: width 0.28s;
   min-height: 100vh;
-  background-color: #545c64;
+  background-color: rgb(48, 65, 86);
+
+  .el-menu-item:hover {
+    background-color: rgb(38, 52, 69) !important;
+  }
 
   .sidebar {
     border: 0;
@@ -63,7 +67,7 @@ export default class extends Vue {
   }
 
   .headerLogo {
-    background-color: rgb(67, 74, 80);
+    background-color: #2b2f3a;
     height: 46px !important;
     padding: 5px;
     text-align: center;

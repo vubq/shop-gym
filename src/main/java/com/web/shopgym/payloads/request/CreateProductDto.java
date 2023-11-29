@@ -18,9 +18,6 @@ public class CreateProductDto {
     private Double price;
     private String categoryId;
     private String brandId;
-
     private List<Image> images;
-    private List<MultipartFile> imageFiles;
-
     private List<ProductDetailDto> productDetails;
 }

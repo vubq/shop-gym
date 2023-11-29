@@ -2,17 +2,14 @@
   <div>
     <span style="font-weight: bold;">Thêm mới sản phẩm</span>
 
-    
     <el-row style="margin-top: 20px; display: flex; gap: 20px;" :gutter="40">
       <el-col :span="8" style="background-color: #fff; border-radius: 4px; padding: 20px; text-align: center;">
-
         <el-upload
           action="#"
           list-type="picture-card"
           :auto-upload="false"
-          ref="upload"
+          ref="imageProductUpload"
           :file-list="listImage"
-          :on-change="addImage"
         >
           <i slot="default" class="el-icon-plus"></i>
           <div slot="file" slot-scope="{file}">
@@ -37,42 +34,8 @@
             </span>
           </div>
         </el-upload>
-        
-
-        <!-- <span>Ảnh sản phẩm</span> -->
-        <!-- <el-upload
-          action="#"
-          list-type="picture-card"
-          :auto-upload="false"
-          
-        >
-            <i slot="default" class="el-icon-plus"></i>
-            <div slot="file" slot-scope="{file}">
-              <img
-                class="el-upload-list__item-thumbnail"
-                :src="file.url" alt=""
-              >
-              <span class="el-upload-list__item-actions">
-                <span
-                  class="el-upload-list__item-preview"
-                  @click="handlePictureCardPreview(file)"
-                >
-                  <i class="el-icon-zoom-in"></i>
-                </span>
-                <span
-                  v-if="!disabled"
-                  class="el-upload-list__item-delete"
-                  @click="handleRemove(file)"
-                >
-                  <i class="el-icon-delete"></i>
-                </span>
-              </span>
-            </div>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog> -->
       </el-col>
+
       <el-col :span="16" style="background-color: #fff; border-radius: 4px; padding: 20px;">
         <span>Thông tin sản phẩm</span>
         <div style="margin-top: 10px;">
@@ -112,7 +75,9 @@
 
               <el-col :span="24">
                 <el-form-item label="Giá mặc định">
-                  <el-input v-model="product.price" placeholder="Vui lòng nhập giá mặc định của sản phẩm"></el-input>
+                  <el-input v-model="product.price" placeholder="Vui lòng nhập giá mặc định của sản phẩm">
+                    <template slot="append">VND</template>
+                  </el-input>
                 </el-form-item>
               </el-col>
 
@@ -190,7 +155,8 @@
     <div style="background-color: #fff; border-radius: 4px; padding: 20px; margin-top: 20px;">
       <el-table
         key="0"
-        :data="listProductDetailAttribute"
+        :data="product.productDetails"
+        ref="tableP"
       >
         <el-table-column type="expand">
           <template slot-scope="{row}">
@@ -198,15 +164,33 @@
               action="#"
               list-type="picture-card"
               :auto-upload="false"
-              :file-list="[{url: 'https://i.pinimg.com/originals/98/ca/1b/98ca1b7585e9642585ac2ba5719f6087.jpg'}]"
+              ref="imageProductDetailUpload"
+              :file-list="row.images"
+              :on-change="$event => addImageProductDetail($event, row)"
             >
-                <i slot="default" class="el-icon-plus"></i>
-                
+              <i slot="default" class="el-icon-plus"></i>
+              <div slot="file" slot-scope="{file}">
+                <img
+                  class="el-upload-list__item-thumbnail"
+                  :src="file.url" alt=""
+                >
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-preview"
+                    @click="handlePictureCardPreview(file)"
+                  >
+                    <i class="el-icon-zoom-in"></i>
+                  </span>
+                  <span
+                    v-if="!disabled"
+                    class="el-upload-list__item-delete"
+                    @click="handleRemove(file)"
+                  >
+                    <i class="el-icon-delete"></i>
+                  </span>
+                </span>
+              </div>
             </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
-            {{ row.name }}
           </template>
         </el-table-column>
         <el-table-column
@@ -223,7 +207,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ genAttribute('SIZE', row.size) }}</span>
+            <span>{{ genAttribute('SIZE', row.sizeId) }}</span>
           </template>
         </el-table-column>
 
@@ -232,7 +216,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ genAttribute('COLOR', row.color) }}</span>
+            <span>{{ genAttribute('COLOR', row.colorId) }}</span>
           </template>
         </el-table-column>
 
@@ -241,7 +225,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            <span>{{ genAttribute('MATERIAL', row.material) }}</span>
+            <span>{{ genAttribute('MATERIAL', row.materialId) }}</span>
           </template>
         </el-table-column>
 
@@ -327,6 +311,9 @@
         :product="productDetailAttribute">
       </ProductDetailAttribute>
     </div> -->
+    <el-button type="primary" @click="createProduct" style="margin-top: 20px;">
+      Thêm sản phẩm
+    </el-button>
 
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
@@ -348,6 +335,10 @@ import { MaterialModel } from '@/models/MaterialModel';
 import { CategoryModel } from '@/models/CategoryModel';
 import { BrandModel } from '@/models/BrandModel';
 import { ProductModel } from '@/models/ProductModel';
+import { ProductDetailModel } from '@/models/ProductDetailModel';
+import { ImageModel } from '@/models/ImageModel';
+import { createProduct } from '@/services/product/ProductService';
+import axios from 'axios';
 
 @Component({
   name: 'ProductDetail',
@@ -369,7 +360,7 @@ export default class extends Vue {
   private selectedSize: any[] = [];
   private selectedMaterial: any[] = [];
 
-  private listProductDetailAttribute: any[] = [];
+  // private listProductDetailAttribute: any[] = [];
 
   private dialogImageUrl: any = '';
   private dialogVisible: any = false;
@@ -378,8 +369,14 @@ export default class extends Vue {
   private listImage: any = []
   private listImageDelete: any = [];
 
-  private addImage() {
-    console.log(this.$refs.upload)
+  private addImageProductDetail(file: any, productDetail: any) {
+    this.product.productDetails = this.product.productDetails?.map((e: any) => {
+      if(e.colorId === productDetail.color && e.sizeId === productDetail.sizeId && e.materialId === productDetail.materialId) {
+        return {...e, images: e.images.push(file)};
+      } else {
+        return e;
+      }
+    });
   }
 
   // private mounted() {
@@ -421,29 +418,50 @@ export default class extends Vue {
   }
 
   private createProduct() {
+    // this.product.imageFiles = (this.$refs.imageProductUpload as any).uploadFiles.map((e: any) => { return e.raw });
+    // this.product.test = (this.$refs.imageProductUpload as any).uploadFiles[0].raw;
+
+    // (this.$refs.imageProductUpload as any).uploadFiles.map((e: any) => {
+    //   const data = new FormData();
+    //   data.append("file", (this.$refs.imageProductUpload as any).uploadFiles[0].raw);
+    //   data.append("upload_preset", "vubq-upload");
+    //   data.append("cloud_name", "vubq");
+    //   axios.post("https://api.cloudinary.com/v1_1/vubq/image/upload", data).then((res: any) => {
+    //     const image = new ImageModel();
+    //     image.publicId = res.public_id;
+    //     image.url = res.url;
+    //     this.product.images?.push(image);
+    //   })
+    // });
+    console.log(this.$refs)
+    console.log(this.product)
     
+
+    // createProduct(this.product).then((res: any) => {
+    //   console.log(res);
+    // })
+    // console.log(this.product);
   }
 
   handleRemove(file: any) {
+
     if(file.raw === undefined) {
       file.delete = true;
       this.listImageDelete.push(file);
     }
-    (this.$refs.upload as any).handleRemove(file);
-    console.log((this.$refs.upload as any).uploadFiles)
+    (this.$refs.imageProductUpload as any).handleRemove(file);
+    console.log((this.$refs.imageProductUpload as any).uploadFiles)
   }
 
   handlePictureCardPreview(file: any) {
+
     this.dialogImageUrl = file.url;
     this.dialogVisible = true;
   }
 
-  handleDownload(file: any) {
-    console.log(file);
-  }
-
   private selectAttribute() {
-    const list: any[] = [];
+
+    const list: ProductDetailModel[] = [];
 
     if(this.selectedSize.length > 0 && this.selectedColor.length > 0 && this.selectedMaterial.length > 0) {
       const totalNumberProduct = this.selectedSize.length * this.selectedColor.length * this.selectedMaterial.length;
@@ -455,41 +473,43 @@ export default class extends Vue {
       for(let i = 0; i < totalNumberProduct; i++) {
 
         let maxSize = 1 * this.selectedColor.length * this.selectedMaterial.length; 
-        let maxColor = 1 * this.selectedSize.length * this.selectedMaterial.length;
+        // let maxColor = 1 * this.selectedSize.length * this.selectedMaterial.length;
 
         // Size
-        let totalSize = list.filter((e: any) => e.size === this.selectedSize[iSize]).length;
+        let totalSize = list.filter((e: any) => e.sizeId === this.selectedSize[iSize]).length;
         let size = totalSize < totalNumberProduct / this.selectedSize.length ? this.selectedSize[iSize] : this.selectedSize[++iSize];
 
-        console.log(i + ": iColor: " + iColor + ", totalSize: " + totalSize);
+        // console.log(i + ": iColor: " + iColor + ", totalSize: " + totalSize);
         // Color
         if(iColor === this.selectedColor.length - 1 && totalSize === maxSize) {
           iColor = 0;
         }
-        let totalColor = list.filter((e: any) => e.size === size && e.color === this.selectedColor[iColor] ).length;
+        let totalColor = list.filter((e: any) => e.sizeId === size && e.colorId === this.selectedColor[iColor] ).length;
         let color = totalColor === maxSize / this.selectedColor.length ? this.selectedColor[++iColor] : this.selectedColor[iColor];
 
         // Material
         if(iMaterial === this.selectedMaterial.length - 1) {
           iMaterial = 0;
         }
-        let totalMaterial = list.filter((e: any) => e.size === size && e.color === color && e.material === this.selectedMaterial[iMaterial]).length;
+        let totalMaterial = list.filter((e: any) => e.sizeId === size && e.colorId === color && e.materialId === this.selectedMaterial[iMaterial]).length;
         let material = totalMaterial === 1 ? this.selectedMaterial[++iMaterial] : this.selectedMaterial[iMaterial];
 
-        list.push({
-          code: '',
-          size: size,
-          color: color,
-          material: material,
-          quantity: 0,
-          price: this.product.price
-        })
+        const productDetail = new ProductDetailModel();
+        productDetail.sizeId = size;
+        productDetail.colorId = color;
+        productDetail.materialId = material;
+        productDetail.quantity = 0;
+        productDetail.price = this.product.price ? this.product.price : 0;
+        productDetail.index = i;
+
+        list.push(productDetail);
       }
     }
-    this.listProductDetailAttribute = list;
+    this.product.productDetails = list;
   }
 
   private genAttribute(field: string, id: string) {
+
     switch (field) {
       case 'SIZE':
         return this.listSize.find((e: any) => e.id === id)?.name;
@@ -504,4 +524,3 @@ export default class extends Vue {
 
 <style lang='scss' scoped>
 </style>
-  

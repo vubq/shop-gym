@@ -19,7 +19,5 @@ public class ProductDetailDto {
     private String sizeId;
     private String colorId;
     private String materialId;
-
     private List<Image> images;
-    private List<MultipartFile> imageFiles;
 }

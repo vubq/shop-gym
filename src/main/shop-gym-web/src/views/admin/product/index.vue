@@ -94,7 +94,7 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
 import { Utils } from '@/utils/utils'
-import { getAllBySearchCriteria } from '@/services/product/service'
+import { getAllBySearchCriteria } from '@/services/product/ProductService'
 import Pagination from '@/components/pagination/index.vue';
 
 @Component({
