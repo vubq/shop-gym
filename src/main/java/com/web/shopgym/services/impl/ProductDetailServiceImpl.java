@@ -28,4 +28,9 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
         return this.productDetailRepository.findAll(Specification.where(specCodeContains), pageable);
     }
+
+    @Override
+    public ProductDetail save(ProductDetail productDetail) {
+        return this.productDetailRepository.save(productDetail);
+    }
 }

@@ -5,11 +5,46 @@
     
     <el-row style="margin-top: 20px; display: flex; gap: 20px;" :gutter="40">
       <el-col :span="8" style="background-color: #fff; border-radius: 4px; padding: 20px; text-align: center;">
-        <!-- <span>Ảnh sản phẩm</span> -->
+
         <el-upload
           action="#"
           list-type="picture-card"
           :auto-upload="false"
+          ref="upload"
+          :file-list="listImage"
+          :on-change="addImage"
+        >
+          <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}">
+            <img
+              class="el-upload-list__item-thumbnail"
+              :src="file.url" alt=""
+            >
+            <span class="el-upload-list__item-actions">
+              <span
+                class="el-upload-list__item-preview"
+                @click="handlePictureCardPreview(file)"
+              >
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+        </el-upload>
+        
+
+        <!-- <span>Ảnh sản phẩm</span> -->
+        <!-- <el-upload
+          action="#"
+          list-type="picture-card"
+          :auto-upload="false"
+          
         >
             <i slot="default" class="el-icon-plus"></i>
             <div slot="file" slot-scope="{file}">
@@ -36,7 +71,7 @@
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
+        </el-dialog> -->
       </el-col>
       <el-col :span="16" style="background-color: #fff; border-radius: 4px; padding: 20px;">
         <span>Thông tin sản phẩm</span>
@@ -292,6 +327,10 @@
         :product="productDetailAttribute">
       </ProductDetailAttribute>
     </div> -->
+
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 
@@ -336,6 +375,18 @@ export default class extends Vue {
   private dialogVisible: any = false;
   private disabled: any = false;
 
+  private listImage: any = []
+  private listImageDelete: any = [];
+
+  private addImage() {
+    console.log(this.$refs.upload)
+  }
+
+  // private mounted() {
+  //   console.log(this.$refs.upload);
+  //   (this.$refs.upload as any).uploadFiles.push({ name: '1', url: 'https://i.pinimg.com/originals/98/ca/1b/98ca1b7585e9642585ac2ba5719f6087.jpg', delete: true})
+  // }
+
   private created() {
 
     getAllColor().then((res: any) => {
@@ -369,8 +420,17 @@ export default class extends Vue {
     })
   }
 
+  private createProduct() {
+    
+  }
+
   handleRemove(file: any) {
-        console.log(file);
+    if(file.raw === undefined) {
+      file.delete = true;
+      this.listImageDelete.push(file);
+    }
+    (this.$refs.upload as any).handleRemove(file);
+    console.log((this.$refs.upload as any).uploadFiles)
   }
 
   handlePictureCardPreview(file: any) {

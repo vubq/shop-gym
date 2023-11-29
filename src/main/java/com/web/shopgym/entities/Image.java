@@ -1,7 +1,6 @@
 package com.web.shopgym.entities;
 
-import com.web.shopgym.enums.EStatus;
-import com.web.shopgym.enums.EUserStatus;
+import com.web.shopgym.enums.EImageType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
@@ -14,21 +13,24 @@ import org.hibernate.annotations.UuidGenerator;
 @FieldNameConstants
 @Builder
 @Entity
-@Table(name="categories")
-public class Category {
+@Table(name = "images")
+public class Image {
 
     @Id
     @UuidGenerator
     @Column(name = "id")
     private String id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "public_id")
+    private String publicId;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "url")
+    private String url;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private EStatus status;
+    @Column(name = "type")
+    private EImageType type;
+
+    @Column(name = "secondary_id")
+    private String secondaryId;
 }

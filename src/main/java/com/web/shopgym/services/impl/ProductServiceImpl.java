@@ -28,4 +28,9 @@ public class ProductServiceImpl implements ProductService {
 
         return this.productRepository.findAll(Specification.where(specNameContains), pageable);
     }
+
+    @Override
+    public Product save(Product product) {
+        return this.productRepository.save(product);
+    }
 }

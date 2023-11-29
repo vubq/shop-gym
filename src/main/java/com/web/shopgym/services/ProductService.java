@@ -7,4 +7,6 @@ import org.springframework.data.domain.Page;
 public interface ProductService {
 
     Page<Product> getAllBySearchCriteria(DataTableRequest dataTableRequest);
+
+    Product save(Product product);
 }
