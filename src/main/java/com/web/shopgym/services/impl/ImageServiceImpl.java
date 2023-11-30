@@ -23,4 +23,9 @@ public class ImageServiceImpl implements ImageService {
     public List<Image> saveAll(List<Image> images) {
         return this.imageRepository.saveAll(images);
     }
+
+    @Override
+    public List<Image> getAllBySecondaryId(String secondaryId) {
+        return this.imageRepository.findAllBySecondaryId(secondaryId);
+    }
 }

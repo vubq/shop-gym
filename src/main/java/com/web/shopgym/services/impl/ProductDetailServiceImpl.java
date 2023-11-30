@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductDetailServiceImpl implements ProductDetailService {
 
@@ -32,5 +34,15 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Override
     public ProductDetail save(ProductDetail productDetail) {
         return this.productDetailRepository.save(productDetail);
+    }
+
+    @Override
+    public List<ProductDetail> getAllByProductId(String productId) {
+        return this.productDetailRepository.findAllByProductId(productId);
+    }
+
+    @Override
+    public List<String> getAllSizeIdByProductId(String productId) {
+        return this.productDetailRepository.findAllSizeIdByProductId(productId);
     }
 }

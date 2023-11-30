@@ -9,7 +9,7 @@
           list-type="picture-card"
           :auto-upload="false"
           ref="imageProductUpload"
-          :file-list="listImage"
+          :file-list="product.images"
         >
           <i slot="default" class="el-icon-plus"></i>
           <div slot="file" slot-scope="{file}">
@@ -158,7 +158,7 @@
         :data="product.productDetails"
         ref="tableP"
       >
-        <el-table-column type="expand">
+        <!-- <el-table-column type="expand">
           <template slot-scope="{row}">
             <el-upload
               action="#"
@@ -192,15 +192,15 @@
               </div>
             </el-upload>
           </template>
-        </el-table-column>
-        <el-table-column
+        </el-table-column> -->
+        <!-- <el-table-column
           label="Code"
           align="center"
         >
           <template slot-scope="{row}">
             <el-input v-model="row.code"></el-input>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column
           label="Size"
@@ -328,7 +328,6 @@ import { getAllSize } from '@/services/size/sizeService'
 import { getAllMaterial } from '@/services/material/materialService'
 import { getAllCategory } from '@/services/category/categoryService'
 import { getAllBrand } from '@/services/brand/brandService'
-import ProductDetailAttribute from './ProductDetailAttribute.vue';
 import { SizeModel } from '@/models/SizeModel';
 import { ColorModel } from '@/models/ColorModel';
 import { MaterialModel } from '@/models/MaterialModel';
@@ -337,16 +336,16 @@ import { BrandModel } from '@/models/BrandModel';
 import { ProductModel } from '@/models/ProductModel';
 import { ProductDetailModel } from '@/models/ProductDetailModel';
 import { ImageModel } from '@/models/ImageModel';
-import { createProduct } from '@/services/product/ProductService';
+import { createProduct, getProductDetailByProductId } from '@/services/product/ProductService';
 import axios from 'axios';
 
 @Component({
   name: 'ProductDetail',
-  components: {
-    ProductDetailAttribute
-  }
+  components: {}
 })
 export default class extends Vue {
+  private productId = this.$route.params.productId;
+
   private product: ProductModel = new ProductModel();
 
   private listColor: ColorModel[] = [];
@@ -385,6 +384,11 @@ export default class extends Vue {
   // }
 
   private created() {
+    if(this.productId) {
+      getProductDetailByProductId(this.productId).then((res: any) => {
+        this.product = res.data
+      })
+    }
 
     getAllColor().then((res: any) => {
       if(res.data) {
@@ -417,30 +421,26 @@ export default class extends Vue {
     })
   }
 
-  private createProduct() {
-    // this.product.imageFiles = (this.$refs.imageProductUpload as any).uploadFiles.map((e: any) => { return e.raw });
-    // this.product.test = (this.$refs.imageProductUpload as any).uploadFiles[0].raw;
+  private async createProduct() {
+    const images: any[] = [];
+    for (const image of (this.$refs.imageProductUpload as any).uploadFiles) {
+      const data = new FormData();
+      data.append("file", image.raw);
+      data.append("upload_preset", "vubq-upload");
+      data.append("cloud_name", "vubq");
+      await axios.post("https://api.cloudinary.com/v1_1/vubq/image/upload", data).then((res: any) => {
+        const image = new ImageModel();
+        console.log(res)
+        image.publicId = res.data.public_id;
+        image.url = res.data.url;
+        images.push(image);
+      })
+    }
+    this.product.images = images;
 
-    // (this.$refs.imageProductUpload as any).uploadFiles.map((e: any) => {
-    //   const data = new FormData();
-    //   data.append("file", (this.$refs.imageProductUpload as any).uploadFiles[0].raw);
-    //   data.append("upload_preset", "vubq-upload");
-    //   data.append("cloud_name", "vubq");
-    //   axios.post("https://api.cloudinary.com/v1_1/vubq/image/upload", data).then((res: any) => {
-    //     const image = new ImageModel();
-    //     image.publicId = res.public_id;
-    //     image.url = res.url;
-    //     this.product.images?.push(image);
-    //   })
-    // });
-    console.log(this.$refs)
-    console.log(this.product)
-    
-
-    // createProduct(this.product).then((res: any) => {
-    //   console.log(res);
-    // })
-    // console.log(this.product);
+    await createProduct(this.product).then((res: any) => {
+      console.log(res);
+    })
   }
 
   handleRemove(file: any) {

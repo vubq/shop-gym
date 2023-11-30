@@ -1,14 +1,14 @@
 package com.web.shopgym.payloads.request;
 
-import com.web.shopgym.entities.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+import com.web.shopgym.entities.ProductDetail;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductDetailDto {
 
     private String id;
@@ -19,5 +19,18 @@ public class ProductDetailDto {
     private String sizeId;
     private String colorId;
     private String materialId;
-    private List<Image> images;
+    private List<ImageDto> images;
+
+    public static ProductDetailDto toDto(ProductDetail productDetail) {
+        return ProductDetailDto.builder()
+                .id(productDetail.getId())
+                .code(productDetail.getCode())
+                .price(productDetail.getPrice())
+                .quantity(productDetail.getQuantity())
+                .productId(productDetail.getProduct().getId())
+                .sizeId(productDetail.getSize().getId())
+                .colorId(productDetail.getColor().getId())
+                .materialId(productDetail.getMaterial().getId())
+                .build();
+    }
 }

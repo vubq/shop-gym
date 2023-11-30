@@ -11,7 +11,7 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'HomePage',
+    name: 'home.page',
     component: HomeView,
     meta: {
       title: 'Home Page',
@@ -21,7 +21,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/login',
-    name: 'LoginPage',
+    name: 'login.page',
     component: LoginPage,
     meta: {
       title: 'Home Page',
@@ -31,16 +31,16 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/admin',
-    name: 'AdminPage',
+    name: 'admin.page',
     component: AdminLayout,
-    redirect: '/admin',
+    redirect: '/admin/product',
     meta: {
       hiddenSidebar: true
     },
     children: [
       {
         path: 'product',
-        name: 'ADProductPage',
+        name: 'admin.product.page',
         component: ADProductPage,
         meta: {
           title: 'Quản lý sản phẩm',
@@ -48,23 +48,21 @@ const routes: Array<RouteConfig> = [
         }
       },
       {
-        path: 'product-detail',
-        name: 'ADProductDetailPage',
+        path: 'product/product-detail',
+        name: 'admin.product.product_detail.page',
         component: ADProductDetailPage,
         meta: {
-          title: 'Sản phẩm',
-          icon: 'el-icon-user-solid',
+          hiddenSidebar: true
         }
       },
       {
-        path: 'hehee',
-        name: 'hehehe',
-        component: ADProductPage,
+        path: 'product/product-detail/:productId',
+        name: 'admin.product.product_detail.id.page',
+        component: ADProductDetailPage,
         meta: {
-          title: 'Hehehe',
-          icon: 'el-icon-user-solid',
+          hiddenSidebar: true
         }
-      }
+      },
     ]
   },
 ];

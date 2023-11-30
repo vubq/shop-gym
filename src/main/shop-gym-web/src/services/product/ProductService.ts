@@ -14,4 +14,11 @@ export const createProduct = (data: any) =>
     data
   })
 
+export const getProductDetailByProductId = (id: string) =>
+  request({
+    url: '/product/product-detail/' + id,
+    method: 'get',
+  })
+
+
 

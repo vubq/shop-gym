@@ -1,9 +1,8 @@
 import axios from 'axios'
-
+import { Message } from 'element-ui'
 
 const service = axios.create({
   baseURL: 'http://localhost:7070/webapi/',
-  timeout: 50000,
 })
 
 // Request interceptors
@@ -16,7 +15,24 @@ service.interceptors.request.use(
     return config
   },
   (error) => {
-    Promise.reject(error)
+    Message({
+      message: 'Lỗi hệ thống! Vui lòng thử lại sau!',
+      type: 'error',
+      duration: 1000
+    })
+  }
+)
+
+service.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    Message({
+      message: 'Lỗi hệ thống! Vui lòng thử lại sau!',
+      type: 'error',
+      duration: 1000 * 5
+    })
   }
 )
 

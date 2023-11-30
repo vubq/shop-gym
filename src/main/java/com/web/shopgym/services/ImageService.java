@@ -9,4 +9,6 @@ public interface ImageService {
     Image save(Image image);
 
     List<Image> saveAll(List<Image> images);
+
+    List<Image> getAllBySecondaryId(String secondaryId);
 }

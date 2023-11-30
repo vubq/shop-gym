@@ -10,15 +10,18 @@
       text-color='#fff'
       active-text-color="#ffd04b"
     >
-      <el-menu-item 
-        v-for="(r, i) in route" :key="i"
-        @click="linkTo(r.path, r.name)" 
-        :index="(i + 1).toString()" 
-        :class="$route.path === '/admin/' + r.path ? 'isActive' : ''"
-      >
-        <i :class='r.meta.icon'></i>
-        <span v-if="!isCollapse">{{ r.meta.title }}</span>
+      <template v-for="(r, i) in route" >
+        <el-menu-item 
+          :key="i"
+          @click="linkTo(r.path, r.name)" 
+          :index="(i + 1).toString()" 
+          :class="$route.path === '/admin/' + r.path ? 'isActive' : ''"
+          v-if="r.meta.hiddenSidebar !== true"
+        >
+          <i :class='r.meta.icon'></i>
+          <span v-if="!isCollapse">{{ r.meta.title }}</span>
       </el-menu-item>
+      </template>
     </el-menu>
   </el-aside>
 </template>

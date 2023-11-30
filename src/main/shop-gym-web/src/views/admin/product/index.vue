@@ -52,7 +52,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span @click="openProductDetail(row.id)">{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -123,6 +123,15 @@ export default class extends Vue {
     sortDesc: true
   };
   private list = [];
+
+  private openProductDetail(id: string) {
+    this.$router.push({
+        name: 'admin.product.product_detail.id.page',
+        params: {
+          productId: id
+        }
+    })
+  }
 
   private created() {
     this.listQuery.currentPage = this.$route.query.currentPage ? Number.parseInt(Utils.getQueryParam(this.$route.query.currentPage)) : this.listQuery.currentPage;

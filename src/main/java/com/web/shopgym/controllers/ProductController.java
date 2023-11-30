@@ -3,9 +3,10 @@ package com.web.shopgym.controllers;
 import com.web.shopgym.entities.*;
 import com.web.shopgym.enums.EImageType;
 import com.web.shopgym.enums.EStatus;
-import com.web.shopgym.payloads.request.CreateProductDto;
-import com.web.shopgym.payloads.request.DataTableRequest;
+import com.web.shopgym.payloads.request.ImageDto;
 import com.web.shopgym.payloads.request.ProductDetailDto;
+import com.web.shopgym.payloads.request.ProductDto;
+import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.payloads.response.DataTableResponse;
 import com.web.shopgym.services.CloudinaryService;
 import com.web.shopgym.services.ImageService;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -53,7 +54,7 @@ public class ProductController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> createProduct(@RequestBody CreateProductDto dto) {
+    public ResponseEntity<?> createProduct(@RequestBody ProductDto dto) {
 
         Product productSave = new Product();
         productSave.setName(dto.getName());
@@ -91,19 +92,29 @@ public class ProductController {
                     .status(EStatus.ACTIVE).build();
             ProductDetail productDetail = this.productDetailService.save(productDetailSave);
 
-            productDetailDto.getImages().forEach((image) -> {
-                Image imageSave = Image.builder()
-                        .url(image.getUrl())
-                        .type(EImageType.PRODUCT_DETAIL)
-                        .publicId(image.getPublicId())
-                        .secondaryId(productDetail.getId())
-                        .build();
-                images.add(imageSave);
-            });
-
-            this.imageService.saveAll(images);
+//            for(ImageDto image: productDetailDto.getImages()) {
+//                Image imageSave = Image.builder()
+//                        .url(image.getUrl())
+//                        .type(EImageType.PRODUCT_DETAIL)
+//                        .publicId(image.getPublicId())
+//                        .secondaryId(productDetail.getId())
+//                        .build();
+//                images.add(imageSave);
+//            }
         });
-
+        this.imageService.saveAll(images);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
+
+    @GetMapping("product-detail/{productId}")
+    public ResponseEntity<ProductDto> getProductDetailByProductId(@PathVariable("productId") String productId) {
+
+        ProductDto product = ProductDto.toDto(this.productService.getById(productId));
+        product.setImages(this.imageService.getAllBySecondaryId(product.getId()).stream().map(ImageDto::toDto).collect(Collectors.toList()));
+        product.setProductDetails(this.productDetailService.getAllByProductId(product.getId()).stream().map(ProductDetailDto::toDto).collect(Collectors.toList()));
+
+        List<String> test = this.productDetailService.getAllSizeIdByProductId(product.getId());
+        return new ResponseEntity<ProductDto>(product, HttpStatus.OK);
+    }
+
 }
