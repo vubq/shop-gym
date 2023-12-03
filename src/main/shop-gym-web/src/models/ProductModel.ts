@@ -14,6 +14,10 @@ export class ProductModel {
   public images?: ImageModel[];
   public productDetails?: ProductDetailModel[];
 
+  public sizes: any[] = [];
+  public colors: any[] = [];
+  public materials: any[] = [];
+
   constructor(init?: Partial<ProductModel>) {
     Object.assign(this, init)
   }

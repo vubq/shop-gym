@@ -90,18 +90,19 @@
               <el-col :span="24">
                 <el-form-item label="Size">
                   <el-select
-                    v-model="selectedSize"
+                    :value="product.sizes"
                     multiple
                     filterable
                     default-first-option
                     placeholder="Vui lòng chọn size"
-                    @change="selectAttribute()"
+                    @change="selectAttribute('SIZE', $event)"
                     style="width: 100%;">
                     <el-option
                       v-for="size in listSize"
                       :key="size.id"
                       :label="size.name"
-                      :value="size.id">
+                      :value="size.id"
+                      :disabled="genDisabled('SIZE', size.id)">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -110,7 +111,7 @@
               <el-col :span="24">
                 <el-form-item label="Màu sắc">
                   <el-select
-                    v-model="selectedColor"
+                    v-model="product.colors"
                     multiple
                     filterable
                     default-first-option
@@ -121,7 +122,8 @@
                       v-for="color in listColor"
                       :key="color.id"
                       :label="color.name"
-                      :value="color.id">
+                      :value="color.id"
+                      :disabled="genDisabled('COLOR', color.id)">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -130,7 +132,7 @@
               <el-col :span="24">
                 <el-form-item label="Chất liệu">
                   <el-select
-                    v-model="selectedMaterial"
+                    v-model="product.materials"
                     multiple
                     filterable
                     default-first-option
@@ -141,7 +143,8 @@
                       v-for="material in listMaterial"
                       :key="material.id"
                       :label="material.name"
-                      :value="material.id">
+                      :value="material.id"
+                      :disabled="genDisabled('MATERIAL', material.id)">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -253,7 +256,7 @@
 
     <!-- <div style="display: flex; gap: 20px;">
       <el-select
-        v-model="selectedSize"
+        v-model="product.sizes"
         multiple
         filterable
         default-first-option
@@ -269,7 +272,7 @@
       </el-select>
 
       <el-select
-        v-model="selectedColor"
+        v-model="product.colors"
         multiple
         filterable
         default-first-option
@@ -285,7 +288,7 @@
       </el-select>
 
       <el-select
-        v-model="selectedMaterial"
+        v-model="product.materials"
         multiple
         filterable
         default-first-option
@@ -301,7 +304,7 @@
       </el-select>
     </div>
 
-    {{ selectedSize }}, {{ selectedColor }}, {{ selectedMaterial }}
+    {{ product.sizes }}, {{ product.colors }}, {{ product.materials }}
 
     <div v-for="(productDetailAttribute, i) in listProductDetailAttribute" :key="i">
       <ProductDetailAttribute 
@@ -323,11 +326,11 @@
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator'
-import { getAllColor } from '@/services/color/colorService'
-import { getAllSize } from '@/services/size/sizeService'
-import { getAllMaterial } from '@/services/material/materialService'
-import { getAllCategory } from '@/services/category/categoryService'
-import { getAllBrand } from '@/services/brand/brandService'
+import { getAllColor } from '@/services/color/ColorService'
+import { getAllSize } from '@/services/size/SizeService'
+import { getAllMaterial } from '@/services/material/MaterialService'
+import { getAllCategory } from '@/services/category/CategoryService'
+import { getAllBrand } from '@/services/brand/BrandService'
 import { SizeModel } from '@/models/SizeModel';
 import { ColorModel } from '@/models/ColorModel';
 import { MaterialModel } from '@/models/MaterialModel';
@@ -355,11 +358,9 @@ export default class extends Vue {
   private listCategory: CategoryModel[] = [];
   private listBrand: BrandModel[] = [];
 
-  private selectedColor: any[] = [];
-  private selectedSize: any[] = [];
-  private selectedMaterial: any[] = [];
-
-  // private listProductDetailAttribute: any[] = [];
+  private listSizeIsAvailable: any[] = [];
+  private listColorIsAvailable: any[] = [];
+  private listMaterialIsAvailable: any[] = [];
 
   private dialogImageUrl: any = '';
   private dialogVisible: any = false;
@@ -387,6 +388,15 @@ export default class extends Vue {
     if(this.productId) {
       getProductDetailByProductId(this.productId).then((res: any) => {
         this.product = res.data
+        if(res.data.sizes.length !== 0) {
+          this.listSizeIsAvailable = res.data.sizes
+        }
+        if(res.data.colors.length !== 0) {
+          this.listColorIsAvailable = res.data.colors
+        }
+        if(res.data.materials.length !== 0) {
+          this.listMaterialIsAvailable = res.data.materials
+        }
       })
     }
 
@@ -459,12 +469,21 @@ export default class extends Vue {
     this.dialogVisible = true;
   }
 
-  private selectAttribute() {
+  private selectAttribute(field: string, value: any) {
+
+    // switch(field) {
+    //   case 'SIZE':
+    //     if(this.listSizeIsAvailable.length === 0) {
+    //       this.product.sizes = value;
+    //     } else {
+          
+    //     }
+    // }
 
     const list: ProductDetailModel[] = [];
 
-    if(this.selectedSize.length > 0 && this.selectedColor.length > 0 && this.selectedMaterial.length > 0) {
-      const totalNumberProduct = this.selectedSize.length * this.selectedColor.length * this.selectedMaterial.length;
+    if(this.product.sizes.length > 0 && this.product.colors.length > 0 && this.product.materials.length > 0) {
+      const totalNumberProduct = this.product.sizes.length * this.product.colors.length * this.product.materials.length;
 
       let iSize = 0;
       let iColor = 0;
@@ -472,33 +491,34 @@ export default class extends Vue {
 
       for(let i = 0; i < totalNumberProduct; i++) {
 
-        let maxSize = 1 * this.selectedColor.length * this.selectedMaterial.length; 
-        // let maxColor = 1 * this.selectedSize.length * this.selectedMaterial.length;
+        let maxSize = 1 * this.product.colors.length * this.product.materials.length; 
+        // let maxColor = 1 * this.product.sizes.length * this.product.materials.length;
 
         // Size
-        let totalSize = list.filter((e: any) => e.sizeId === this.selectedSize[iSize]).length;
-        let size = totalSize < totalNumberProduct / this.selectedSize.length ? this.selectedSize[iSize] : this.selectedSize[++iSize];
+        let totalSize = list.filter((e: any) => e.sizeId === this.product.sizes[iSize]).length;
+        let size = totalSize < totalNumberProduct / this.product.sizes.length ? this.product.sizes[iSize] : this.product.sizes[++iSize];
 
         // console.log(i + ": iColor: " + iColor + ", totalSize: " + totalSize);
         // Color
-        if(iColor === this.selectedColor.length - 1 && totalSize === maxSize) {
+        if(iColor === this.product.colors.length - 1 && totalSize === maxSize) {
           iColor = 0;
         }
-        let totalColor = list.filter((e: any) => e.sizeId === size && e.colorId === this.selectedColor[iColor] ).length;
-        let color = totalColor === maxSize / this.selectedColor.length ? this.selectedColor[++iColor] : this.selectedColor[iColor];
+        let totalColor = list.filter((e: any) => e.sizeId === size && e.colorId === this.product.colors[iColor] ).length;
+        let color = totalColor === maxSize / this.product.colors.length ? this.product.colors[++iColor] : this.product.colors[iColor];
 
         // Material
-        if(iMaterial === this.selectedMaterial.length - 1) {
+        if(iMaterial === this.product.materials.length - 1) {
           iMaterial = 0;
         }
-        let totalMaterial = list.filter((e: any) => e.sizeId === size && e.colorId === color && e.materialId === this.selectedMaterial[iMaterial]).length;
-        let material = totalMaterial === 1 ? this.selectedMaterial[++iMaterial] : this.selectedMaterial[iMaterial];
+        let totalMaterial = list.filter((e: any) => e.sizeId === size && e.colorId === color && e.materialId === this.product.materials[iMaterial]).length;
+        let material = totalMaterial === 1 ? this.product.materials[++iMaterial] : this.product.materials[iMaterial];
 
         const productDetail = new ProductDetailModel();
         productDetail.sizeId = size;
         productDetail.colorId = color;
         productDetail.materialId = material;
         productDetail.quantity = 0;
+        
         productDetail.price = this.product.price ? this.product.price : 0;
         productDetail.index = i;
 
@@ -517,6 +537,18 @@ export default class extends Vue {
         return this.listColor.find((e: any) => e.id === id)?.name;
       case 'MATERIAL':
         return this.listMaterial.find((e: any) => e.id === id)?.name;
+    }
+  }
+
+  private genDisabled(field: string, id: string) {
+    if(!this.productId) return false;
+    switch (field) {
+      case 'SIZE':
+        return this.listSizeIsAvailable.find((e: any) => e === id) ? true : false;
+      case 'COLOR':
+        return this.listColorIsAvailable.find((e: any) => e === id) ? true : false;
+      case 'MATERIAL':
+        return this.listMaterialIsAvailable.find((e: any) => e === id) ? true : false;
     }
   }
 }

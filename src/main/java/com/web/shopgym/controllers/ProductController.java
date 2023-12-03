@@ -44,6 +44,7 @@ public class ProductController {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_WAREHOUSE_MANAGEMENT')")
     public DataTableResponse getAllBySearchCriteria(DataTableRequest dataTableRequest) {
+
         Page<Product> result = null;
         result = this.productService.getAllBySearchCriteria(dataTableRequest);
 
@@ -112,9 +113,11 @@ public class ProductController {
         ProductDto product = ProductDto.toDto(this.productService.getById(productId));
         product.setImages(this.imageService.getAllBySecondaryId(product.getId()).stream().map(ImageDto::toDto).collect(Collectors.toList()));
         product.setProductDetails(this.productDetailService.getAllByProductId(product.getId()).stream().map(ProductDetailDto::toDto).collect(Collectors.toList()));
+        product.setSizes(this.productDetailService.getAllSizeIdByProductId(product.getId()));
+        product.setColors(this.productDetailService.getAllColorIdByProductId(product.getId()));
+        product.setMaterials((this.productDetailService.getAllMaterialIdByProductId(product.getId())));
 
-        List<String> test = this.productDetailService.getAllSizeIdByProductId(product.getId());
-        return new ResponseEntity<ProductDto>(product, HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
 }

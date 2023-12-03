@@ -45,4 +45,14 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     public List<String> getAllSizeIdByProductId(String productId) {
         return this.productDetailRepository.findAllSizeIdByProductId(productId);
     }
+
+    @Override
+    public List<String> getAllColorIdByProductId(String productId) {
+        return this.productDetailRepository.findAllColorIdByProductId(productId);
+    }
+
+    @Override
+    public List<String> getAllMaterialIdByProductId(String productId) {
+        return this.productDetailRepository.findAllMaterilIdByProductId(productId);
+    }
 }

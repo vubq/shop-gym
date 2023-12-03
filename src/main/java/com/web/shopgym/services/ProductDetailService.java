@@ -15,4 +15,8 @@ public interface ProductDetailService {
     List<ProductDetail> getAllByProductId(String productId);
 
     List<String> getAllSizeIdByProductId(String productId);
+
+    List<String> getAllColorIdByProductId(String productId);
+
+    List<String> getAllMaterialIdByProductId(String productId);
 }

@@ -20,4 +20,10 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, St
 
     @Query(value = "SELECT DISTINCT pd.size.id FROM ProductDetail pd WHERE pd.product.id = :productId")
     List<String> findAllSizeIdByProductId(String productId);
+
+    @Query(value = "SELECT DISTINCT pd.color.id FROM ProductDetail pd WHERE pd.product.id = :productId")
+    List<String> findAllColorIdByProductId(String productId);
+
+    @Query(value = "SELECT DISTINCT pd.material.id FROM ProductDetail pd WHERE pd.product.id = :productId")
+    List<String> findAllMaterilIdByProductId(String productId);
 }

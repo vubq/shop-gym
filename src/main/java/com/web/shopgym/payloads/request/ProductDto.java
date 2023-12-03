@@ -21,6 +21,10 @@ public class ProductDto {
     private List<ImageDto> images;
     private List<ProductDetailDto> productDetails;
 
+    private List<String> sizes;
+    private List<String> colors;
+    private List<String> materials;
+
     public static ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .id(product.getId())
