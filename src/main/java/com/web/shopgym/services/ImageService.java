@@ -10,5 +10,7 @@ public interface ImageService {
 
     List<Image> saveAll(List<Image> images);
 
+    void deleteAll(List<Image> images);
+
     List<Image> getAllBySecondaryId(String secondaryId);
 }

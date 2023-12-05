@@ -13,6 +13,7 @@ import com.web.shopgym.services.ImageService;
 import com.web.shopgym.services.ProductDetailService;
 import com.web.shopgym.services.ProductService;
 import jakarta.transaction.Transactional;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,9 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@RequestBody ProductDto dto) {
 
         Product productSave = new Product();
+        if(!Strings.isEmpty(dto.getId())) {
+            productSave.setId(dto.getId());
+        }
         productSave.setName(dto.getName());
         productSave.setPrice(dto.getPrice());
         productSave.setDescription(dto.getDescription());
@@ -69,14 +73,16 @@ public class ProductController {
 
         List<Image> images = new ArrayList<>();
 
-        dto.getImages().forEach((image) -> {
-            Image imageSave = Image.builder()
-                    .url(image.getUrl())
-                    .type(EImageType.PRODUCT)
-                    .publicId(image.getPublicId())
-                    .secondaryId(product.getId())
-                    .build();
-            images.add(imageSave);
+        dto.getImages().forEach((imageDto) -> {
+            if(Strings.isEmpty(imageDto.getId())) {
+                Image imageSave = Image.builder()
+                        .url(imageDto.getUrl())
+                        .type(EImageType.PRODUCT)
+                        .publicId(imageDto.getPublicId())
+                        .secondaryId(product.getId())
+                        .build();
+                images.add(imageSave);
+            }
         });
 
         if(product == null) return new ResponseEntity<>("ERROR", HttpStatus.OK);
@@ -91,6 +97,9 @@ public class ProductController {
                     .color(Color.builder().id(productDetailDto.getColorId()).build())
                     .material(Material.builder().id(productDetailDto.getMaterialId()).build())
                     .status(EStatus.ACTIVE).build();
+            if(!Strings.isEmpty(productDetailDto.getId())) {
+                productDetailSave.setId(productDetailDto.getId());
+            }
             ProductDetail productDetail = this.productDetailService.save(productDetailSave);
 
 //            for(ImageDto image: productDetailDto.getImages()) {
@@ -104,6 +113,24 @@ public class ProductController {
 //            }
         });
         this.imageService.saveAll(images);
+
+        List<Image> imageDeletes = new ArrayList<>();
+
+        if(dto.getImageDeletes() != null) {
+            dto.getImageDeletes().forEach((image) -> {
+                this.cloudinaryService.deleteByPublicId(image.getPublicId());
+                Image imageSave = Image.builder()
+                        .id(image.getId())
+                        .url(image.getUrl())
+                        .type(image.getType())
+                        .publicId(image.getPublicId())
+                        .secondaryId(image.getSecondaryId())
+                        .build();
+                imageDeletes.add(imageSave);
+            });
+        }
+        this.imageService.deleteAll(imageDeletes);
+
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 

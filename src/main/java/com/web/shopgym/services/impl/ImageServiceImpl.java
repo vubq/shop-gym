@@ -25,6 +25,11 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public void deleteAll(List<Image> images) {
+        this.imageRepository.deleteAll(images);
+    }
+
+    @Override
     public List<Image> getAllBySecondaryId(String secondaryId) {
         return this.imageRepository.findAllBySecondaryId(secondaryId);
     }

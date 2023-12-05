@@ -90,12 +90,12 @@
               <el-col :span="24">
                 <el-form-item label="Size">
                   <el-select
-                    :value="product.sizes"
+                    v-model="product.sizes"
                     multiple
                     filterable
                     default-first-option
                     placeholder="Vui lòng chọn size"
-                    @change="selectAttribute('SIZE', $event)"
+                    @change="selectAttribute()"
                     style="width: 100%;">
                     <el-option
                       v-for="size in listSize"
@@ -138,6 +138,7 @@
                     default-first-option
                     placeholder="Vui lòng chọn chất liệu"
                     @change="selectAttribute()"
+                    :remove-tag="removeTag"
                     style="width: 100%;">
                     <el-option
                       v-for="material in listMaterial"
@@ -314,8 +315,8 @@
         :product="productDetailAttribute">
       </ProductDetailAttribute>
     </div> -->
-    <el-button type="primary" @click="createProduct" style="margin-top: 20px;">
-      Thêm sản phẩm
+    <el-button type="primary" @click="createOrUpdateProduct" style="margin-top: 20px;">
+      {{ productId ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm' }}
     </el-button>
 
     <el-dialog :visible.sync="dialogVisible">
@@ -351,6 +352,8 @@ export default class extends Vue {
 
   private product: ProductModel = new ProductModel();
 
+  private listProductDetail: ProductDetailModel[] = [];
+
   private listColor: ColorModel[] = [];
   private listSize: SizeModel[] = [];
   private listMaterial: MaterialModel[] = [];
@@ -369,34 +372,45 @@ export default class extends Vue {
   private listImage: any = []
   private listImageDelete: any = [];
 
-  private addImageProductDetail(file: any, productDetail: any) {
-    this.product.productDetails = this.product.productDetails?.map((e: any) => {
-      if(e.colorId === productDetail.color && e.sizeId === productDetail.sizeId && e.materialId === productDetail.materialId) {
-        return {...e, images: e.images.push(file)};
-      } else {
-        return e;
-      }
-    });
+  private removeTag(value: any) {
+    console.log(value)
+    console.log('a')
+    // switch(field) {
+    //   case 'SIZE': 
+    //     if(!this.listSizeIsAvailable.find((e: any) => e === id)) {
+    //       this.product.sizes = this.product.sizes.filter((e: any) => e === id);
+    //     }
+    //     return;
+    //   case 'COLOR': 
+    //     if(!this.listColorIsAvailable.find((e: any) => e === id)) {
+    //       this.product.colors = this.product.colors.filter((e: any) => e === id);
+    //     }
+    //     return;
+    //   case 'MATERIAL': 
+    //     if(!this.listMaterialIsAvailable.find((e: any) => e === id)) {
+    //       this.product.materials = this.product.materials.filter((e: any) => e === id);
+    //     }
+    //     return;
+    // }
   }
-
-  // private mounted() {
-  //   console.log(this.$refs.upload);
-  //   (this.$refs.upload as any).uploadFiles.push({ name: '1', url: 'https://i.pinimg.com/originals/98/ca/1b/98ca1b7585e9642585ac2ba5719f6087.jpg', delete: true})
-  // }
 
   private created() {
     if(this.productId) {
       getProductDetailByProductId(this.productId).then((res: any) => {
-        this.product = res.data
+        this.product = res.data;
         if(res.data.sizes.length !== 0) {
-          this.listSizeIsAvailable = res.data.sizes
+          this.listSizeIsAvailable = res.data.sizes;
         }
         if(res.data.colors.length !== 0) {
-          this.listColorIsAvailable = res.data.colors
+          this.listColorIsAvailable = res.data.colors;
         }
         if(res.data.materials.length !== 0) {
-          this.listMaterialIsAvailable = res.data.materials
+          this.listMaterialIsAvailable = res.data.materials;
         }
+        if(res.data.productDetails.length != 0) {
+          this.listProductDetail = res.data.productDetails;
+        }
+        this.selectAttribute();
       })
     }
 
@@ -431,36 +445,50 @@ export default class extends Vue {
     })
   }
 
-  private async createProduct() {
+  private async createOrUpdateProduct() {
+
     const images: any[] = [];
     for (const image of (this.$refs.imageProductUpload as any).uploadFiles) {
-      const data = new FormData();
-      data.append("file", image.raw);
-      data.append("upload_preset", "vubq-upload");
-      data.append("cloud_name", "vubq");
-      await axios.post("https://api.cloudinary.com/v1_1/vubq/image/upload", data).then((res: any) => {
-        const image = new ImageModel();
-        console.log(res)
-        image.publicId = res.data.public_id;
-        image.url = res.data.url;
+      if(image.raw) {
+        const data = new FormData();
+        data.append("file", image.raw);
+        data.append("upload_preset", "vubq-upload");
+        data.append("cloud_name", "vubq");
+        await axios.post("https://api.cloudinary.com/v1_1/vubq/image/upload", data).then((res: any) => {
+          console.log(res)
+          const imageNew = new ImageModel();
+          imageNew.publicId = res.data.public_id;
+          imageNew.url = res.data.url;
+          images.push(imageNew);
+        })
+      } else {
         images.push(image);
-      })
+      }
     }
     this.product.images = images;
 
-    await createProduct(this.product).then((res: any) => {
-      console.log(res);
-    })
+    // if(this.productId) {
+    //   console.log('aaaa')
+    // } else {
+      await createProduct(this.product).then((res: any) => {
+        console.log(res);
+      })
+    // }
   }
 
   handleRemove(file: any) {
-
-    if(file.raw === undefined) {
-      file.delete = true;
-      this.listImageDelete.push(file);
+    console.log(file)
+    if(!file.raw) {
+      this.listImageDelete.push({ 
+        id: file.id,
+        publicId: file.publicId,
+        url: file.url,
+        type: file.type,
+        secondaryId: file.secondaryId
+      });
+      this.product.imageDeletes = this.listImageDelete;
     }
     (this.$refs.imageProductUpload as any).handleRemove(file);
-    console.log((this.$refs.imageProductUpload as any).uploadFiles)
   }
 
   handlePictureCardPreview(file: any) {
@@ -469,16 +497,7 @@ export default class extends Vue {
     this.dialogVisible = true;
   }
 
-  private selectAttribute(field: string, value: any) {
-
-    // switch(field) {
-    //   case 'SIZE':
-    //     if(this.listSizeIsAvailable.length === 0) {
-    //       this.product.sizes = value;
-    //     } else {
-          
-    //     }
-    // }
+  private selectAttribute() {
 
     const list: ProductDetailModel[] = [];
 
@@ -525,7 +544,20 @@ export default class extends Vue {
         list.push(productDetail);
       }
     }
-    this.product.productDetails = list;
+    if(this.productId) {
+      this.product.productDetails = list.map((e: any) => {
+        const productDetail = this.listProductDetail.find((x: any) => (
+          e.sizeId === x.sizeId && e.colorId === x.colorId && e.materialId === x.materialId
+        ))
+        if(productDetail) {
+          return productDetail;
+        } else {
+          return e;
+        }
+      })
+    } else {
+      this.product.productDetails = list;
+    }
   }
 
   private genAttribute(field: string, id: string) {

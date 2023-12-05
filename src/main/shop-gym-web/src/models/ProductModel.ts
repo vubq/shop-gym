@@ -12,6 +12,7 @@ export class ProductModel {
   public categoryId?: string;
 
   public images?: ImageModel[];
+  public imageDeletes: ImageModel[] = [];
   public productDetails?: ProductDetailModel[];
 
   public sizes: any[] = [];
