@@ -5,6 +5,7 @@ import LoginPage from '@/views/login/index.vue';
 import ADProductPage from '@/views/admin/product/index.vue';
 import ADProductDetailPage from '@/views/admin/product/product-detail/index.vue';
 import AdminLayout from '@/layouts/admin/index.vue';
+import ADSellAtTheShop from '@/views/admin/sell-at-the-shop/index.vue'
 
 Vue.use(VueRouter);
 
@@ -13,6 +14,7 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'home.page',
     component: HomeView,
+    redirect: '/admin/product',
     meta: {
       title: 'Home Page',
       icon: 'el-icon-user-solid',
@@ -63,6 +65,15 @@ const routes: Array<RouteConfig> = [
           hiddenSidebar: true
         }
       },
+      {
+        path: 'sell-at-the-shop',
+        name: 'admin.sell_at_the_shop.page',
+        component: ADSellAtTheShop,
+        meta: {
+          title: 'Bán tại cửa hàng',
+          icon: 'el-icon-user-solid',
+        }
+      }
     ]
   },
 ];
