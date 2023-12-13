@@ -19,4 +19,6 @@ public interface ProductDetailService {
     List<String> getAllColorIdByProductId(String productId);
 
     List<String> getAllMaterialIdByProductId(String productId);
+
+    List<ProductDetail> getAllProductDetailInOfStock();
 }

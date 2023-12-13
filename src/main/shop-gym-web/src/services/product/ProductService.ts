@@ -20,5 +20,17 @@ export const getProductDetailByProductId = (id: string) =>
     method: 'get',
   })
 
+export const getAllProductInOfStock = () =>
+  request({
+    url: '/product/product-in-of-stock',
+    method: 'get',
+  })
+
+export const getProductById = (id: string) =>
+  request({
+    url: '/product/' + id,
+    method: 'get',
+  })
+
 
 

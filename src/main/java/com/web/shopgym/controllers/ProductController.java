@@ -8,6 +8,7 @@ import com.web.shopgym.payloads.request.ProductDetailDto;
 import com.web.shopgym.payloads.request.ProductDto;
 import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.payloads.response.DataTableResponse;
+import com.web.shopgym.payloads.response.Response;
 import com.web.shopgym.services.CloudinaryService;
 import com.web.shopgym.services.ImageService;
 import com.web.shopgym.services.ProductDetailService;
@@ -52,6 +53,11 @@ public class ProductController {
         return DataTableResponse.build().ok()
                 .totalRows(result.getTotalElements())
                 .items(result.get().toList());
+    }
+
+    @GetMapping("/{id}")
+    public Response getById(@PathVariable("id") String id) {
+        return Response.build().ok().data(this.productService.getById(id));
     }
 
     @PostMapping
@@ -147,4 +153,16 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
+    @GetMapping("product-in-of-stock")
+    public Response getAllProductInOfStock() {
+        List<String> listProductId = this.productService.getAllProductIdInOfStock();
+        List<Product> products = new ArrayList<>();
+        if(listProductId != null) {
+            listProductId.forEach((productId) -> {
+                products.add(this.productService.getById(productId));
+            });
+        }
+
+        return Response.build().ok().data(products);
+    }
 }

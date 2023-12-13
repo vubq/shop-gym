@@ -6,4 +6,8 @@ export class Utils {
       }
       return ''
     }
+
+    public static formatCurrenyVND(value: any): string {
+      return value.toLocaleString("it-IT", {style : "currency", currency : "VND"});
+    }
 }

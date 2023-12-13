@@ -3,6 +3,7 @@ package com.web.shopgym.controllers;
 import com.web.shopgym.entities.ProductDetail;
 import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.payloads.response.DataTableResponse;
+import com.web.shopgym.payloads.response.Response;
 import com.web.shopgym.services.ProductDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,6 @@ public class ProductDetailController {
     private ProductDetailService productDetailService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_WAREHOUSE_MANAGEMENT')")
     public DataTableResponse getAllBySearchCriteria(DataTableRequest dataTableRequest) {
         Page<ProductDetail> result = null;
         result = this.productDetailService.getAllBySearchCriteria(dataTableRequest);
@@ -29,5 +29,10 @@ public class ProductDetailController {
         return DataTableResponse.build().ok()
                 .totalRows(result.getTotalElements())
                 .items(result.get().toList());
+    }
+
+    @GetMapping("/get-all-product-detail-in-of-stock")
+    public Response getAllProductDetailInOfStock() {
+        return Response.build().ok().data(this.productDetailService.getAllProductDetailInOfStock());
     }
 }

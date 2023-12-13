@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -37,5 +39,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getById(String id) {
         return this.productRepository.findById(id).get();
+    }
+
+    @Override
+    public List<String> getAllProductIdInOfStock() {
+        return this.productRepository.getAllProductIdInOfStock();
     }
 }

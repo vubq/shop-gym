@@ -40,7 +40,7 @@
         <template slot-scope="{row}">
           <span>
             <el-image 
-              style="width: 100px; height: 100px"
+              style="width: 50px; height: 50px"
               :src="row.image" 
               :preview-src-list="[row.image]">
             </el-image>

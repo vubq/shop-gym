@@ -5,7 +5,7 @@ import LoginPage from '@/views/login/index.vue';
 import ADProductPage from '@/views/admin/product/index.vue';
 import ADProductDetailPage from '@/views/admin/product/product-detail/index.vue';
 import AdminLayout from '@/layouts/admin/index.vue';
-import ADSellAtTheShop from '@/views/admin/sell-at-the-shop/index.vue'
+import ADSalesAtTheCounter from '@/views/admin/sales-at-the-counter/index.vue'
 
 Vue.use(VueRouter);
 
@@ -66,11 +66,11 @@ const routes: Array<RouteConfig> = [
         }
       },
       {
-        path: 'sell-at-the-shop',
-        name: 'admin.sell_at_the_shop.page',
-        component: ADSellAtTheShop,
+        path: 'sales-at-the-counter',
+        name: 'admin.sales-at-the-counter.page',
+        component: ADSalesAtTheCounter,
         meta: {
-          title: 'Bán tại cửa hàng',
+          title: 'Bán hàng tại quầy',
           icon: 'el-icon-user-solid',
         }
       }

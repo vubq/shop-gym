@@ -55,4 +55,9 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     public List<String> getAllMaterialIdByProductId(String productId) {
         return this.productDetailRepository.findAllMaterilIdByProductId(productId);
     }
+
+    @Override
+    public List<ProductDetail> getAllProductDetailInOfStock() {
+        return this.productDetailRepository.getAllProductDetailInOfStock();
+    }
 }
