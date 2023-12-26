@@ -14,7 +14,7 @@
                 <div style="display: flex;">
                   <el-image 
                     style="width: 50px; height: 50px"
-                    :src="p.image">
+                    :src="p.product.image">
                   </el-image>
                   <div style="margin-left: 20px;">
                     <div>{{ p.product.name }}</div>
