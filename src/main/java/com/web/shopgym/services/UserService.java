@@ -9,4 +9,6 @@ public interface UserService {
     public Optional<User> findByUserName(String userName);
     Boolean existsByUserName(String userName);
     Boolean existsByEmail(String email);
+
+    public Optional<User> findById(String id);
 }

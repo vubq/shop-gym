@@ -1,5 +1,4 @@
 import { ProductDetailModel } from "./ProductDetailModel";
-import { ProductModel } from "./ProductModel";
 import { StatusEnum } from "./enums/StatusEnum";
 
 export class OrderDetailModel {
@@ -10,7 +9,7 @@ export class OrderDetailModel {
 	public totalAmount?: number;
 	public isVoucher?: boolean;
 	public status?: StatusEnum;
-	
+
 	public productDetail?: ProductDetailModel;
 
   constructor(init?: Partial<OrderDetailModel>) {

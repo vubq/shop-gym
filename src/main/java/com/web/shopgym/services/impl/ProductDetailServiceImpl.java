@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductDetailServiceImpl implements ProductDetailService {
@@ -59,5 +60,10 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Override
     public List<ProductDetail> getAllProductDetailInOfStock() {
         return this.productDetailRepository.getAllProductDetailInOfStock();
+    }
+
+    @Override
+    public Optional<ProductDetail> findById(String id) {
+        return this.productDetailRepository.findById(id);
     }
 }

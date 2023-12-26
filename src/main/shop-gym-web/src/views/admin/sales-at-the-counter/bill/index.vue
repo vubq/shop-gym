@@ -3,7 +3,7 @@
     <el-row :gutter="10">
       <el-col :span="16">
         <div>
-          <el-select value="" filterable placeholder="Tìm kiếm sản phẩm (Tên SP size / màu / chất liệu)" style="width: 100%;">
+          <el-select value="" filterable placeholder="Tìm kiếm sản phẩm (Tên SP size / màu / chất liệu)" style="width: 100%; height: 100% !important;">
             <el-option
               v-for="p in products"
               :key="p.id"
@@ -130,6 +130,7 @@ import { OrderDetailModel } from '@/models/OrderDetailModel'
 import { getProductById } from '@/services/product/ProductService'
 import { getAllProductDetailInOfStock } from '@/services/product-detail/ProductDetailService'
 import { Utils } from '@/utils/utils'
+import { createInvoice } from '@/services/order/OrderService'
 
 @Component({
   name: 'Bill',
@@ -184,6 +185,7 @@ export default class extends Vue {
       this.bill.orderDetails.push({
         ... new OrderDetailModel(),
         productDetail: productDetail,
+        productDetailId: productDetail.id,
         quantity: 1
       })
     }
@@ -202,6 +204,9 @@ export default class extends Vue {
   }
 
   private payment() {
+    createInvoice(this.bill).then((res: any) => {
+      console.log(res)
+    })
     console.log(this.bill)
   }
   

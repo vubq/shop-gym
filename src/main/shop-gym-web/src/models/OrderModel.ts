@@ -1,7 +1,7 @@
 import { OrderDetailModel } from "./OrderDetailModel";
+import { VoucherModel } from "./VoucherModel";
 import { OrderStatusEnum } from "./enums/OrderStatusEnum";
 import { OrderTypeEnum } from "./enums/OrderTypeEnum";
-import { VoucherTypeEnum } from "./enums/VoucherTypeEnum";
 
 export class OrderModel {
   public id?: string;
@@ -13,7 +13,7 @@ export class OrderModel {
   public createdDate?: Date;
   public completedDate?: Date;
   public totalAmount?: number;
-  public voucher?: VoucherTypeEnum;
+  public voucherId?: string;
   public status?: OrderStatusEnum;
 
   public orderDetails: OrderDetailModel[] = [];
