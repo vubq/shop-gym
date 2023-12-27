@@ -7,7 +7,7 @@
     v-if="listProductSelected.length > 0"
     style="border: 1px solid #DCDFE6; border-radius: 4px; border-bottom: 0;"
   >
-    <el-table-column width="20">
+    <el-table-column width="30">
       <template slot-scope="scope">
         <span>
           {{ scope.$index + 1 }}
@@ -47,12 +47,12 @@
         <span>{{ row.productDetail.material.name }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="SL" align="center" width="85">
+    <el-table-column label="SL" align="center" width="75">
       <template slot-scope="{row}">
         <div style="display: flex; align-items: center;">
-          <el-button style="color: #8492a6; padding: 4px 3.77px;" @click="row.quantity--">-</el-button>
+          <!-- <el-button style="color: #8492a6; padding: 4px 3.77px;" @click="row.quantity--">-</el-button> -->
           <el-input class="input-quantity" v-model="row.quantity" style="padding: 0; margin-left: 4px; margin-right: 4px;"></el-input>
-          <el-button style="color: #8492a6; padding: 4px 2px;" @click="row.quantity++">+</el-button>
+          <!-- <el-button style="color: #8492a6; padding: 4px 2px;" @click="row.quantity++">+</el-button> -->
           <!-- <div style="margin-left: 5px;">
             <div style="line-height: 1.5; cursor: pointer; color: #8492a6; user-select: none !important;" @click="row.quantity++">▲</div>
             <div style="line-height: 1.5; cursor: pointer; color: #8492a6; user-select: none !important;" @click="row.quantity--">▼</div>
@@ -67,9 +67,9 @@
         </span>
       </template>
     </el-table-column>
-    <el-table-column label="" align="center" width="50">
+    <el-table-column label="" align="center" width="70">
       <template slot-scope="scope">
-        <el-button style="padding: 5px;" @click="removeProduct(scope.$index)">
+        <el-button style="padding-left: 10px; padding-right: 10px;" @click="removeProduct(scope.$index)">
           <i class="el-icon-delete"></i>
         </el-button>
       </template>

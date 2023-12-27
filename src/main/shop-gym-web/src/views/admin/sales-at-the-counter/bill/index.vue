@@ -42,9 +42,9 @@
       </el-col>
       <el-col :span="8">
         <div style="border: 1px solid #DCDFE6; border-radius: 4px; padding: 10px;">
-          <span style="cursor: pointer; user-select: none;" @click="isInformationCustomer = !isInformationCustomer">
+          <span style="cursor: pointer; user-select: none;">
             Thông tin khách hàng
-            <i :class="`${ !isInformationCustomer ? 'el-icon-arrow-down' : 'el-icon-arrow-up' }`"></i>
+            <!-- <i :class="`${ !isInformationCustomer ? 'el-icon-arrow-down' : 'el-icon-arrow-up' }`"></i> -->
           </span>
 
           <el-form label-position="right" label-width="" style="margin-top: 10px;" v-if="isInformationCustomer">
@@ -92,19 +92,19 @@
 
           <div style="margin-top: 10px; display: flex; justify-content: space-between;">
             <span>Khách cần thanh toán: </span>
-            <span>{{ Utils.formatCurrenyVND(genTotalAmount()) }}</span>
+            <span>{{ Utils.formatCurrenyVND(moneyToBePaid()) }}</span>
           </div>
 
           <div style="margin-top: 10px; display: flex; justify-content: space-between;">
             <span>Tiền khách trả: </span>
             <div>
-              <el-input class="input-payment" v-model="money"></el-input>
+              <el-input class="input-payment" v-model="money" :disabled="moneyToBePaid() === 0"></el-input>
             </div>
           </div>
 
           <div style="margin-top: 10px; display: flex; justify-content: space-between;">
             <span>Tiền trả lại khách: </span>
-            <span>{{ Utils.formatCurrenyVND(0) }}</span>
+            <span>{{ Utils.formatCurrenyVND(money - moneyToBePaid() > 0 ? money - moneyToBePaid() : 0) }}</span>
           </div>
 
           <div style="margin-top: 10px;">
@@ -145,7 +145,7 @@ export default class extends Vue {
   private user: any;
   private products: any = [];
   private Utils = Utils;
-  private isInformationCustomer = false;
+  private isInformationCustomer = true;
   private money = '';
   private voucherString = '';
   private voucher: any;
@@ -167,11 +167,15 @@ export default class extends Vue {
     })
   }
 
+  private moneyToBePaid() {
+    return this.genTotalAmount() - this.genReducedMoney() > 0 ? this.genTotalAmount() - this.genReducedMoney() : 0;
+  }
+
   private genReducedMoney() {
     if(this.voucher) {
       let money = 0;
       if(this.voucher.type === 'PERCENT') {
-        money = this.genTotalAmount() - (this.genTotalAmount() * this.voucher.value / 100);
+        money = this.genTotalAmount() * (this.voucher.value / 100);
       }
       if(this.voucher.type === 'MONEY') {
         money = this.voucher.value;
@@ -242,10 +246,18 @@ export default class extends Vue {
   }
 
   private payment() {
-    createInvoice(this.bill).then((res: any) => {
-      console.log(res)
-    })
-    console.log(this.bill)
+    const user = JSON.parse(localStorage.getItem('user') as any);
+    if(user) {
+      this.bill.createdBy = user.id;
+      this.bill.type = 'ONLINE';
+      if(this.voucher) {
+        this.bill.voucherId = this.voucher.id;
+      }
+      createInvoice(this.bill).then((res: any) => {
+        console.log(res)
+      })
+      console.log(this.bill)
+    }
   }
   
 }

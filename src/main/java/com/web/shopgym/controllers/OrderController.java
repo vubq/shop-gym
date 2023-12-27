@@ -1,9 +1,11 @@
 package com.web.shopgym.controllers;
 
+import com.cloudinary.utils.StringUtils;
 import com.web.shopgym.entities.Order;
 import com.web.shopgym.entities.OrderDetail;
 import com.web.shopgym.entities.ProductDetail;
 import com.web.shopgym.entities.Voucher;
+import com.web.shopgym.enums.EOrderStatus;
 import com.web.shopgym.enums.EStatus;
 import com.web.shopgym.enums.EVoucherType;
 import com.web.shopgym.payloads.request.OrderDto;
@@ -40,44 +42,51 @@ public class OrderController {
     @PostMapping()
     public Response createInvoice(@RequestBody OrderDto dto) {
 
-        Voucher voucher = this.voucherService.findById("2b679357-6e57-4262-b7cb-0cf016859760").orElse(null);
+        Voucher voucher;
+        if(!StringUtils.isEmpty(dto.getVoucherId())) {
+            voucher = this.voucherService.findById(dto.getVoucherId()).get();
+        } else {
+            voucher = null;
+        }
+
+        double totalAmount = dto.getOrderDetails().stream()
+                .mapToDouble(orderDetail -> orderDetail.getQuantity() * this.productDetailService.findById(orderDetail.getProductDetailId()).get().getPrice())
+                .sum();
+
+        double discountForProducts = 0;
+
+        if(voucher != null && voucher.getType() == EVoucherType.MONEY) {
+            discountForProducts = voucher.getValue() / dto.getOrderDetails().size();
+            totalAmount = totalAmount - voucher.getValue();
+        }
+        if(voucher != null && voucher.getType() == EVoucherType.PERCENT) {
+            discountForProducts = (totalAmount - totalAmount * voucher.getValue() / 100) / dto.getOrderDetails().size();
+            totalAmount = totalAmount - totalAmount * voucher.getValue() / 100;
+        }
 
         Order order = this.orderService.save(Order.builder()
                 .type(dto.getType())
                 .fullNameCustomer(dto.getFullNameCustomer())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
-                .createdBy(this.userService.findById("a1b6a48d-d73d-496a-b242-0f23be85de0e").get())
+                .createdBy(this.userService.findById(dto.getCreatedBy()).get())
                 .createdDate(new Date())
                 .completedDate(new Date())
-                .totalAmount(dto.getTotalAmount())
+                .totalAmount(totalAmount)
                 .voucher(voucher)
-                .status(dto.getStatus())
+                .status(EOrderStatus.SUCCESS)
                 .build());
-
-        double totalAmountIsReduced = voucher != null ? voucher.getValue() : 0;
-        double discountForProducts = 0;
-
-        if(voucher != null && voucher.getType() == EVoucherType.MONEY) {
-            discountForProducts = voucher.getValue() / dto.getOrderDetails().size();
-        }
-        if(voucher != null && voucher.getType() == EVoucherType.PERCENT) {
-            double total = dto.getOrderDetails().stream()
-                    .mapToDouble(orderDetail -> orderDetail.getQuantity() * this.productDetailService.findById(orderDetail.getProductDetailId()).get().getPrice())
-                    .sum();
-            discountForProducts = (total - total * voucher.getValue()) / dto.getOrderDetails().size();
-        }
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         double finalDiscountForProducts = discountForProducts;
         dto.getOrderDetails().forEach(orderDetail -> {
             ProductDetail productDetail = this.productDetailService.findById(orderDetail.getProductDetailId()).get();
-            double totalAmount = orderDetail.getQuantity() * productDetail.getPrice() - finalDiscountForProducts;
+            double total = orderDetail.getQuantity() * productDetail.getPrice() - finalDiscountForProducts;
             orderDetails.add(OrderDetail.builder()
                     .order(order)
                     .productDetail(productDetail)
                     .quantity(orderDetail.getQuantity())
-                    .totalAmount(totalAmount > 0 ? totalAmount : 0)
+                    .totalAmount(total > 0 ? total : 0)
                     .isVoucher(voucher == null ? false : true)
                     .status(EStatus.ACTIVE)
                     .build());
