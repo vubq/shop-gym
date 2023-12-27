@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldNameConstants
 @Entity
-@Table(name="vouvhers")
+@Table(name="vouchers")
 public class Voucher {
 
     @Id

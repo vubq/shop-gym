@@ -81,13 +81,13 @@
           <div style="margin-top: 10px; display: flex; justify-content: space-between;">
             <span>Voucher: </span>
             <div>
-              <el-input class="input-payment" v-model="voucher"></el-input>
+              <el-input class="input-payment" v-model="voucherString" @change="getVoucher"></el-input>
             </div>
           </div>
 
           <div style="margin-top: 10px; display: flex; justify-content: space-between;">
-            <span>Giảm giá: </span>
-            <span> - {{ Utils.formatCurrenyVND(0) }}</span>
+            <span>Giảm giá {{ voucherValue }}: </span>
+            <span> - {{ Utils.formatCurrenyVND(genReducedMoney()) }}</span>
           </div>
 
           <div style="margin-top: 10px; display: flex; justify-content: space-between;">
@@ -131,6 +131,7 @@ import { getProductById } from '@/services/product/ProductService'
 import { getAllProductDetailInOfStock } from '@/services/product-detail/ProductDetailService'
 import { Utils } from '@/utils/utils'
 import { createInvoice } from '@/services/order/OrderService'
+import { getVoucherByCode } from '@/services/voucher/VoucherService'
 
 @Component({
   name: 'Bill',
@@ -146,8 +147,10 @@ export default class extends Vue {
   private Utils = Utils;
   private isInformationCustomer = false;
   private money = '';
-  private voucher = '';
+  private voucherString = '';
+  private voucher: any;
   private note = '';
+  private voucherValue = '';
 
   private created() {
     this.user = JSON.parse(localStorage.getItem('user') as any);
@@ -160,6 +163,41 @@ export default class extends Vue {
     getAllProductDetailInOfStock().then((res: any) => {
       if(res.data && res.data.code === 0) {
         this.products = res.data.data;
+      }
+    })
+  }
+
+  private genReducedMoney() {
+    if(this.voucher) {
+      let money = 0;
+      if(this.voucher.type === 'PERCENT') {
+        money = this.genTotalAmount() - (this.genTotalAmount() * this.voucher.value / 100);
+      }
+      if(this.voucher.type === 'MONEY') {
+        money = this.voucher.value;
+      }
+      return money > 0 ? money : 0;
+    } else {
+      return 0;
+    }
+  }
+
+  private getVoucher() {
+    getVoucherByCode(this.voucherString).then((res: any) => {
+      if(res.data) {
+        console.log(res.data)
+        const startDate = new Date(res.data.startDate);
+        const endDate = new Date(res.data.endDate);
+        const nowDate = new Date();
+        if(nowDate >= startDate && nowDate <= endDate) {
+          this.voucher = res.data;
+          if(res.data.type === 'PERCENT') {
+            this.voucherValue = '(' + res.data.value + '%' + ')';
+          }
+          if(res.data.type === 'MONEY') {
+            this.voucherValue = '(' + Utils.formatCurrenyVND(res.data.value) + ')';
+          }
+        }
       }
     })
   }
