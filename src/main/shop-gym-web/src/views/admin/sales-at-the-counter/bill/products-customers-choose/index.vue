@@ -7,14 +7,14 @@
     v-if="listProductSelected.length > 0"
     style="border: 1px solid #DCDFE6; border-radius: 4px; border-bottom: 0;"
   >
-    <el-table-column width="30">
+    <el-table-column align="center" width="50">
       <template slot-scope="scope">
         <span>
           {{ scope.$index + 1 }}
         </span>
       </template>
     </el-table-column>
-    <el-table-column align="center" width="70">
+    <el-table-column align="center" width="100">
       <template slot-scope="{row}">
         <span>
           <el-image 
@@ -25,29 +25,29 @@
         </span>
       </template>
     </el-table-column>
-    <el-table-column label="Tên sản phẩm" width="120">
+    <el-table-column label="Tên sản phẩm">
       <template slot-scope="{row}">
         <span style="text-align: left;">
           {{ row.productDetail.product.name }}
         </span>
       </template>
     </el-table-column>
-    <el-table-column label="Size" align="center" width="100">
+    <el-table-column label="Size" align="center">
       <template slot-scope="{row}">
         <span>{{ row.productDetail.size.name }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="Màu" align="center" width="100">
+    <el-table-column label="Màu" align="center">
       <template slot-scope="{row}">
         <span>{{ row.productDetail.color.name }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="Chất liệu" align="center" width="100">
+    <el-table-column label="Chất liệu" align="center">
       <template slot-scope="{row}">
         <span>{{ row.productDetail.material.name }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="SL" align="center" width="75">
+    <el-table-column label="SL" align="center">
       <template slot-scope="{row}">
         <div style="display: flex; align-items: center;">
           <!-- <el-button style="color: #8492a6; padding: 4px 3.77px;" @click="row.quantity--">-</el-button> -->
@@ -67,7 +67,7 @@
         </span>
       </template>
     </el-table-column>
-    <el-table-column label="" align="center" width="70">
+    <el-table-column label="" align="center">
       <template slot-scope="scope">
         <el-button style="padding-left: 10px; padding-right: 10px;" @click="removeProduct(scope.$index)">
           <i class="el-icon-delete"></i>

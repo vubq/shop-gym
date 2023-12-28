@@ -33,6 +33,13 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column> -->
+      <el-table-column align="center" width="50">
+        <template slot-scope="scope">
+          <span>
+            {{ scope.$index + 1 }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="Ảnh"
         align="center"
@@ -52,7 +59,7 @@
         align="center"
       >
         <template slot-scope="{row}">
-          <span @click="openProductDetail(row.id)">{{ row.name }}</span>
+          <span @click="openProductDetail(row.id)" class="link-type">{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -202,6 +209,15 @@ export default class extends Vue {
 
   .font-bold {
     font-weight: bold;
+  }
+
+  .link-type {
+    color: #337ab7;
+    cursor: pointer;
+  }
+
+  .link-type:hover {
+    color: #20a0ff;
   }
 }
 </style>

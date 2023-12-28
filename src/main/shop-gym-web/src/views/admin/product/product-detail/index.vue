@@ -348,7 +348,7 @@ import axios from 'axios';
   components: {}
 })
 export default class extends Vue {
-  private productId = this.$route.params.productId;
+  private productId = this.$route.params.productId || '';
 
   private product: ProductModel = new ProductModel();
 

@@ -60,7 +60,7 @@ public class OrderController {
             totalAmount = totalAmount - voucher.getValue();
         }
         if(voucher != null && voucher.getType() == EVoucherType.PERCENT) {
-            discountForProducts = (totalAmount - totalAmount * voucher.getValue() / 100) / dto.getOrderDetails().size();
+            discountForProducts = (totalAmount * voucher.getValue() / 100) / dto.getOrderDetails().size();
             totalAmount = totalAmount - totalAmount * voucher.getValue() / 100;
         }
 

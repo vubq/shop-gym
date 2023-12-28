@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    v-loading="isLoading"
+    element-loading-text="Đang xử lý..."
+    element-loading-spinner="el-icon-loading">
     <span style="font-weight: bold;">Bán tại cửa hàng</span>
 
     <el-button
@@ -23,7 +26,7 @@
         :label="o.fullNameCustomer"
         :name="o.id"
       >
-        <Bill :bill="o"></Bill>
+        <Bill :bill="o" :isLoading="isLoading"></Bill>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -41,6 +44,7 @@ import { OrderModel } from '@/models/OrderModel';
   }
 })
 export default class extends Vue {
+  private isLoading = false;
   private orderChoose = 'HD1';
   private orderIndex = 1;
   private orders: OrderModel[] = [

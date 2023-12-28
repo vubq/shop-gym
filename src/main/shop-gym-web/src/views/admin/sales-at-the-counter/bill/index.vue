@@ -142,6 +142,7 @@ import { getVoucherByCode } from '@/services/voucher/VoucherService'
 })
 export default class extends Vue {
   @Prop() private bill: any;
+  @Prop() private isLoading: any;
   private user: any;
   private products: any = [];
   private Utils = Utils;
@@ -246,18 +247,29 @@ export default class extends Vue {
   }
 
   private payment() {
-    const user = JSON.parse(localStorage.getItem('user') as any);
-    if(user) {
-      this.bill.createdBy = user.id;
-      this.bill.type = 'ONLINE';
-      if(this.voucher) {
-        this.bill.voucherId = this.voucher.id;
+    this.$confirm('', 'Xác nhận thanh toán', {
+      confirmButtonText: 'Thanh toán',
+      cancelButtonText: 'Hủy',
+      type: 'warning'
+    }).then(() => {
+      this.isLoading = true;
+      const user = JSON.parse(localStorage.getItem('user') as any);
+      if(user) {
+        this.bill.createdBy = user.id;
+        this.bill.type = 'ONLINE';
+        if(this.voucher) {
+          this.bill.voucherId = this.voucher.id;
+        }
+        createInvoice(this.bill).then((res: any) => {
+          if(res.data && res.data.code === 0) {
+            console.log(res.data.data)
+          }
+        }).finally(() => this.isLoading = false);
+        console.log(this.bill)
       }
-      createInvoice(this.bill).then((res: any) => {
-        console.log(res)
-      })
-      console.log(this.bill)
-    }
+    }).catch(() => {
+      console.log('a')
+    });
   }
   
 }
