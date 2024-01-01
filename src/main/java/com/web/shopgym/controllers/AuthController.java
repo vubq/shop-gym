@@ -42,7 +42,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -56,11 +56,15 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        User user = this.userService.findById(userDetails.getId()).orElse(null);
+
         return ResponseEntity.ok(new JwtResponse(jwt,
                 "Bearer",
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
+                user != null ? user.getFullName() : "",
+                user != null ? user.getAvatar() : "",
                 roles));
     }
 
