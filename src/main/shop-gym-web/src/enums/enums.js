@@ -7,3 +7,8 @@ export const ResponseCode = {
   CODE_EXPIRED: 8888,
   CODE_INTERNAL_ERROR: 9999
 }
+
+export const Status = {
+  ACTIVE: 'ACTIVE',
+  IN_ACTIVE: 'IN_ACTIVE'
+}

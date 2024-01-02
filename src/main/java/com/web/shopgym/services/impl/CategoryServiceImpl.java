@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -27,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<Category> getListOfCategoriesByCriteria(DataTableRequest request) {
+    public Page<Category> getListOfCategoriesByCriteria(DataTableRequest request, String status) {
         PageRequest pageable = request.toPageable();
         BaseSpecification<Category> specNameContains = new BaseSpecification<>(
                 SearchCriteria.builder()
@@ -35,6 +36,17 @@ public class CategoryServiceImpl implements CategoryService {
                         .operation(SearchOperation.CONTAINS)
                         .value(request.getFilter().trim().toUpperCase())
                         .build());
-        return this.categoryRepository.findAll(Specification.where(specNameContains), pageable);
+        BaseSpecification<Category> specStatusEquality = new BaseSpecification<>(
+                SearchCriteria.builder()
+                        .keys(new String[]{Category.Fields.status})
+                        .operation(SearchOperation.EQUALITY)
+                        .value(status)
+                        .build());
+        return this.categoryRepository.findAll(Specification.where(specNameContains).and(specStatusEquality), pageable);
+    }
+
+    @Override
+    public Optional<Category> findById(String id) {
+        return this.categoryRepository.findById(id);
     }
 }

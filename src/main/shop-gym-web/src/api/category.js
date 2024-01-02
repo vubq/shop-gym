@@ -8,3 +8,9 @@ export const getListOfCategoriesByCriteria = (params) =>
     method: 'get',
     params
   })
+
+export const getCategoryById = (id) =>
+  request({
+    url: ENV + '/' + id,
+    method: 'get'
+  })
