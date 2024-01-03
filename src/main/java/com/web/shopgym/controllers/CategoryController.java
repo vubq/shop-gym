@@ -1,6 +1,7 @@
 package com.web.shopgym.controllers;
 
 import com.web.shopgym.entities.Category;
+import com.web.shopgym.dtos.CategoryDTO;
 import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.payloads.response.DataTableResponse;
 import com.web.shopgym.payloads.response.Response;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -27,6 +29,29 @@ public class CategoryController {
     @GetMapping("{id}")
     public Response getById(@PathVariable String id) {
         return Response.build().ok().data(this.categoryService.findById(id));
+    }
+
+    @PostMapping()
+    public Response create(@RequestBody CategoryDTO categoryDTO) {
+        Category category = this.categoryService.save(Category.builder()
+                        .name(categoryDTO.getName())
+                        .description(categoryDTO.getDescription())
+                        .createdAt(new Date())
+                        .status(categoryDTO.getStatus())
+                        .build());
+        return Response.build().ok().data(category);
+    }
+
+    @PutMapping()
+    public Response update(@RequestBody CategoryDTO categoryDTO) {
+        Category category = this.categoryService.save(Category.builder()
+                .id(categoryDTO.getId())
+                .name(categoryDTO.getName())
+                .description(categoryDTO.getDescription())
+                .createdAt(categoryDTO.getCreatedAt())
+                .status(categoryDTO.getStatus())
+                .build());
+        return Response.build().ok().data(category);
     }
 
     @GetMapping("get-list-of-categories-by-criteria")

@@ -29,6 +29,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<Category> getListOfCategoriesByCriteria(DataTableRequest request, String status) {
+        request.setSortBy("createdAt");
+        request.setSortDesc(true);
         PageRequest pageable = request.toPageable();
         BaseSpecification<Category> specNameContains = new BaseSpecification<>(
                 SearchCriteria.builder()
@@ -48,5 +50,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Optional<Category> findById(String id) {
         return this.categoryRepository.findById(id);
+    }
+
+    @Override
+    public Category save(Category category) {
+        return this.categoryRepository.save(category);
     }
 }

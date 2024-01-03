@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,6 +28,9 @@ public class Material {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "created_at")
+    private Date createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

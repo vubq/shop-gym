@@ -14,4 +14,6 @@ public interface CategoryService {
     Page<Category> getListOfCategoriesByCriteria(DataTableRequest request, String status);
 
     Optional<Category> findById(String id);
+
+    Category save(Category category);
 }

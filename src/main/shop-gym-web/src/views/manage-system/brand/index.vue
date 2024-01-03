@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div style="display: flex; justify-content: space-between;">
-      <h3>Quản lý danh mục</h3>
+      <h3>Quản lý thương hiệu</h3>
       <div style="display: flex; align-items: center; margin-left: 10px;">
-        <el-button @click="showModalCreateCategory">
+        <el-button @click="showModalCreateBrand">
           <i class="el-icon-plus" />
         </el-button>
       </div>
@@ -26,7 +26,7 @@
     <el-table
       :key="tableKey"
       v-loading="isLoadingTable"
-      :data="listOfCategories"
+      :data="listOfBrands"
       :header-cell-style="{ background: '#f5f7fa' }"
       border
     >
@@ -57,7 +57,7 @@
 
       <el-table-column label="" align="center">
         <template slot-scope="{row}">
-          <el-button @click="showCategory(row.id)">
+          <el-button @click="showBrand(row.id)">
             <i class="el-icon-view" />
           </el-button>
         </template>
@@ -72,33 +72,28 @@
       @pagination="replaceQuery"
     />
 
-    <el-dialog :title="category.id ? 'Thông tin danh mục' : 'Thêm mới danh mục'" :visible.sync="showModal" :close-on-click-modal="false" width="30%">
+    <el-dialog :title="brand.id ? 'Thông tin thương hiệu' : 'Thêm mới thương hiệu'" :visible.sync="showModal" :close-on-click-modal="false" width="30%">
       <el-form v-loading="isLoadingModal">
         <el-form-item label="Tên" label-width="8">
-          <el-input autocomplete="off" v-model="category.name"></el-input>
+          <el-input autocomplete="off" v-model="brand.name"></el-input>
         </el-form-item>
         <el-form-item label="Mô tả" label-width="8">
-          <el-input autocomplete="off" v-model="category.description"></el-input>
+          <el-input autocomplete="off" v-model="brand.description"></el-input>
         </el-form-item>
-        <el-radio v-model="category.status" :label="Status.ACTIVE">Hoạt động</el-radio>
-        <el-radio v-model="category.status" :label="Status.IN_ACTIVE">Ngừng hoạt động</el-radio>
+        <el-radio v-model="brand.status" :label="Status.ACTIVE">Hoạt động</el-radio>
+        <el-radio v-model="brand.status" :label="Status.IN_ACTIVE">Ngừng hoạt động</el-radio>
         <div style="margin-top: 30px; display: flex; justify-content: end;">
           <el-button @click="showModal = false">Hủy</el-button>
-          <el-button type="primary" v-if="!category.id" @click="create">Thêm mới</el-button>
+          <el-button type="primary" v-if="!brand.id" @click="create">Thêm mới</el-button>
           <el-button type="primary" v-else @click="update">Cập nhật</el-button>
         </div>
       </el-form>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="showModal = false">Hủy</el-button>
-        <el-button type="primary" v-if="!category.id" v-loading="isLoadingModal">Thêm mới</el-button>
-        <el-button type="primary" v-else v-loading="isLoadingModal">Cập nhật</el-button>
-      </span> -->
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getListOfCategoriesByCriteria, getCategoryById, createCategory, updateCategory } from '../../../api/category'
+import { getListOfBrandsByCriteria, getBrandById, createBrand, updateBrand } from '../../../api/brand'
 import Pagination from '../../../components/pagination'
 import { ResponseCode, Status } from '../../../enums/enums'
 
@@ -122,29 +117,29 @@ export default {
       },
       Status: Status,
       showModal: false,
-      category: {
+      brand: {
         id: '',
         name: '',
         description: '',
         createdAt: new Date(),
         status: Status.ACTIVE
       },
-      listOfCategories: []
+      listOfBrands: []
     }
   },
   methods: {
-    getListOfCategories() {
+    getListOfBrands() {
       this.isLoadingTable = true
-      getListOfCategoriesByCriteria(this.listQuery)
+      getListOfBrandsByCriteria(this.listQuery)
         .then(res => {
           if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
-            this.listOfCategories = res.data.items
+            this.listOfBrands = res.data.items
             this.total = res.data.totalRows
           }
         }).finally(() => (this.isLoadingTable = false))
     },
     reloadTable() {
-      this.getListOfCategories()
+      this.getListOfBrands()
     },
     replaceQuery() {
       this.reloadTable()
@@ -153,19 +148,19 @@ export default {
       this.listQuery.currentPage = 1
       this.replaceQuery()
     },
-    showCategory(categoryId) {
+    showBrand(brandId) {
       this.showModal = true
       this.isLoadingModal = true
-      getCategoryById(categoryId)
+      getBrandById(brandId)
         .then(res => {
           if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
-            this.category = res.data.data
+            this.brand = res.data.data
           }
         }).finally(() => (this.isLoadingModal = false))
     },
-    showModalCreateCategory() {
+    showModalCreateBrand() {
       this.showModal = true
-      this.category = {
+      this.brand = {
         id: '',
         name: '',
         description: '',
@@ -174,8 +169,8 @@ export default {
     },
     create() {
       this.isLoadingModal = true
-      if(!this.category.id) {
-        createCategory(this.category)
+      if(!this.brand.id) {
+        createBrand(this.brand)
           .then(res => {
             if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
               this.isLoadingModal = false
@@ -188,8 +183,8 @@ export default {
     },
     update() {
       this.isLoadingModal = true
-      if(this.category.id) {
-        updateCategory(this.category)
+      if(this.brand.id) {
+        updateBrand(this.brand)
           .then(res => {
             if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
               this.isLoadingModal = false

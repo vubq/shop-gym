@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div style="display: flex; justify-content: space-between;">
-      <h3>Quản lý danh mục</h3>
+      <h3>Quản lý màu sắc</h3>
       <div style="display: flex; align-items: center; margin-left: 10px;">
-        <el-button @click="showModalCreateCategory">
+        <el-button @click="showModalCreateColor">
           <i class="el-icon-plus" />
         </el-button>
       </div>
@@ -26,7 +26,7 @@
     <el-table
       :key="tableKey"
       v-loading="isLoadingTable"
-      :data="listOfCategories"
+      :data="listOfColors"
       :header-cell-style="{ background: '#f5f7fa' }"
       border
     >
@@ -57,7 +57,7 @@
 
       <el-table-column label="" align="center">
         <template slot-scope="{row}">
-          <el-button @click="showCategory(row.id)">
+          <el-button @click="showColor(row.id)">
             <i class="el-icon-view" />
           </el-button>
         </template>
@@ -72,33 +72,28 @@
       @pagination="replaceQuery"
     />
 
-    <el-dialog :title="category.id ? 'Thông tin danh mục' : 'Thêm mới danh mục'" :visible.sync="showModal" :close-on-click-modal="false" width="30%">
+    <el-dialog :title="color.id ? 'Thông tin màu sắc' : 'Thêm mới màu sắc'" :visible.sync="showModal" :close-on-click-modal="false" width="30%">
       <el-form v-loading="isLoadingModal">
         <el-form-item label="Tên" label-width="8">
-          <el-input autocomplete="off" v-model="category.name"></el-input>
+          <el-input autocomplete="off" v-model="color.name"></el-input>
         </el-form-item>
         <el-form-item label="Mô tả" label-width="8">
-          <el-input autocomplete="off" v-model="category.description"></el-input>
+          <el-input autocomplete="off" v-model="color.description"></el-input>
         </el-form-item>
-        <el-radio v-model="category.status" :label="Status.ACTIVE">Hoạt động</el-radio>
-        <el-radio v-model="category.status" :label="Status.IN_ACTIVE">Ngừng hoạt động</el-radio>
+        <el-radio v-model="color.status" :label="Status.ACTIVE">Hoạt động</el-radio>
+        <el-radio v-model="color.status" :label="Status.IN_ACTIVE">Ngừng hoạt động</el-radio>
         <div style="margin-top: 30px; display: flex; justify-content: end;">
           <el-button @click="showModal = false">Hủy</el-button>
-          <el-button type="primary" v-if="!category.id" @click="create">Thêm mới</el-button>
+          <el-button type="primary" v-if="!color.id" @click="create">Thêm mới</el-button>
           <el-button type="primary" v-else @click="update">Cập nhật</el-button>
         </div>
       </el-form>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="showModal = false">Hủy</el-button>
-        <el-button type="primary" v-if="!category.id" v-loading="isLoadingModal">Thêm mới</el-button>
-        <el-button type="primary" v-else v-loading="isLoadingModal">Cập nhật</el-button>
-      </span> -->
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getListOfCategoriesByCriteria, getCategoryById, createCategory, updateCategory } from '../../../api/category'
+import { getListOfColorsByCriteria, getColorById, createColor, updateColor } from '../../../api/color'
 import Pagination from '../../../components/pagination'
 import { ResponseCode, Status } from '../../../enums/enums'
 
@@ -122,29 +117,29 @@ export default {
       },
       Status: Status,
       showModal: false,
-      category: {
+      color: {
         id: '',
         name: '',
         description: '',
         createdAt: new Date(),
         status: Status.ACTIVE
       },
-      listOfCategories: []
+      listOfColors: []
     }
   },
   methods: {
-    getListOfCategories() {
+    getListOfColors() {
       this.isLoadingTable = true
-      getListOfCategoriesByCriteria(this.listQuery)
+      getListOfColorsByCriteria(this.listQuery)
         .then(res => {
           if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
-            this.listOfCategories = res.data.items
+            this.listOfColors = res.data.items
             this.total = res.data.totalRows
           }
         }).finally(() => (this.isLoadingTable = false))
     },
     reloadTable() {
-      this.getListOfCategories()
+      this.getListOfColors()
     },
     replaceQuery() {
       this.reloadTable()
@@ -153,19 +148,19 @@ export default {
       this.listQuery.currentPage = 1
       this.replaceQuery()
     },
-    showCategory(categoryId) {
+    showColor(colorId) {
       this.showModal = true
       this.isLoadingModal = true
-      getCategoryById(categoryId)
+      getColorById(colorId)
         .then(res => {
           if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
-            this.category = res.data.data
+            this.color = res.data.data
           }
         }).finally(() => (this.isLoadingModal = false))
     },
-    showModalCreateCategory() {
+    showModalCreateColor() {
       this.showModal = true
-      this.category = {
+      this.color = {
         id: '',
         name: '',
         description: '',
@@ -174,8 +169,8 @@ export default {
     },
     create() {
       this.isLoadingModal = true
-      if(!this.category.id) {
-        createCategory(this.category)
+      if(!this.color.id) {
+        createColor(this.color)
           .then(res => {
             if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
               this.isLoadingModal = false
@@ -188,8 +183,8 @@ export default {
     },
     update() {
       this.isLoadingModal = true
-      if(this.category.id) {
-        updateCategory(this.category)
+      if(this.color.id) {
+        updateColor(this.color)
           .then(res => {
             if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
               this.isLoadingModal = false

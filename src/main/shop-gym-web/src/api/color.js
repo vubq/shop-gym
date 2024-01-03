@@ -1,28 +1,28 @@
 import request from '@/utils/request'
 
-const ENV = '/category'
+const ENV = '/color'
 
-export const getListOfCategoriesByCriteria = (params) =>
+export const getListOfColorsByCriteria = (params) =>
   request({
-    url: ENV + '/get-list-of-categories-by-criteria',
+    url: ENV + '/get-list-of-colors-by-criteria',
     method: 'get',
     params
   })
 
-export const getCategoryById = (id) =>
+export const getColorById = (id) =>
   request({
     url: ENV + '/' + id,
     method: 'get'
   })
 
-export const createCategory = (data) =>
+export const createColor = (data) =>
   request({
     url: ENV,
     method: 'post',
     data
   })
 
-export const updateCategory = (data) =>
+export const updateColor = (data) =>
   request({
     url: ENV,
     method: 'put',

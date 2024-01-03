@@ -1,28 +1,28 @@
 import request from '@/utils/request'
 
-const ENV = '/category'
+const ENV = '/material'
 
-export const getListOfCategoriesByCriteria = (params) =>
+export const getListOfMaterialsByCriteria = (params) =>
   request({
-    url: ENV + '/get-list-of-categories-by-criteria',
+    url: ENV + '/get-list-of-materials-by-criteria',
     method: 'get',
     params
   })
 
-export const getCategoryById = (id) =>
+export const getMaterialById = (id) =>
   request({
     url: ENV + '/' + id,
     method: 'get'
   })
 
-export const createCategory = (data) =>
+export const createMaterial = (data) =>
   request({
     url: ENV,
     method: 'post',
     data
   })
 
-export const updateCategory = (data) =>
+export const updateMaterial = (data) =>
   request({
     url: ENV,
     method: 'put',

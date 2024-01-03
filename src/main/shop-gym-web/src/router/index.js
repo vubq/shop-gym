@@ -95,7 +95,7 @@ export const constantRouterMap = [
       {
         path: 'brand',
         name: 'product-management.brand',
-        component: () => import('@/views/manage-system/product'),
+        component: () => import('@/views/manage-system/brand'),
         meta: {
           icon: 'svg-pifu', title: 'Thương hiệu'
         }
@@ -103,7 +103,7 @@ export const constantRouterMap = [
       {
         path: 'color',
         name: 'product-management.color',
-        component: () => import('@/views/manage-system/product'),
+        component: () => import('@/views/manage-system/color'),
         meta: {
           icon: 'svg-pifu', title: 'Màu sắc'
         }
@@ -111,7 +111,7 @@ export const constantRouterMap = [
       {
         path: 'size',
         name: 'product-management.size',
-        component: () => import('@/views/manage-system/product'),
+        component: () => import('@/views/manage-system/size'),
         meta: {
           icon: 'svg-pifu', title: 'Kích cỡ'
         }
@@ -119,7 +119,7 @@ export const constantRouterMap = [
       {
         path: 'material',
         name: 'product-management.material',
-        component: () => import('@/views/manage-system/product'),
+        component: () => import('@/views/manage-system/material'),
         meta: {
           icon: 'svg-pifu', title: 'Chất liệu'
         }

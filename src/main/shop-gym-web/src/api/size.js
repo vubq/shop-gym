@@ -1,28 +1,28 @@
 import request from '@/utils/request'
 
-const ENV = '/category'
+const ENV = '/size'
 
-export const getListOfCategoriesByCriteria = (params) =>
+export const getListOfSizesByCriteria = (params) =>
   request({
-    url: ENV + '/get-list-of-categories-by-criteria',
+    url: ENV + '/get-list-of-sizes-by-criteria',
     method: 'get',
     params
   })
 
-export const getCategoryById = (id) =>
+export const getSizeById = (id) =>
   request({
     url: ENV + '/' + id,
     method: 'get'
   })
 
-export const createCategory = (data) =>
+export const createSize = (data) =>
   request({
     url: ENV,
     method: 'post',
     data
   })
 
-export const updateCategory = (data) =>
+export const updateSize = (data) =>
   request({
     url: ENV,
     method: 'put',
