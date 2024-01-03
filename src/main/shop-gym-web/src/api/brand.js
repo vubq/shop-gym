@@ -28,3 +28,9 @@ export const updateBrand = (data) =>
     method: 'put',
     data
   })
+
+export const getAllBrand = () =>
+  request({
+    url: '/brand',
+    method: 'get'
+  })

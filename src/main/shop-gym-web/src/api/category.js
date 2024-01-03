@@ -28,3 +28,9 @@ export const updateCategory = (data) =>
     method: 'put',
     data
   })
+
+export const getAllCategory = () =>
+  request({
+    url: '/category',
+    method: 'get'
+  })

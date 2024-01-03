@@ -28,3 +28,9 @@ export const updateMaterial = (data) =>
     method: 'put',
     data
   })
+
+export const getAllMaterial = () =>
+  request({
+    url: '/material',
+    method: 'get'
+  })

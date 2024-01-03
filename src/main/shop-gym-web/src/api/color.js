@@ -28,3 +28,9 @@ export const updateColor = (data) =>
     method: 'put',
     data
   })
+
+export const getAllColor = () =>
+  request({
+    url: '/color',
+    method: 'get'
+  })

@@ -28,3 +28,9 @@ export const updateSize = (data) =>
     method: 'put',
     data
   })
+
+export const getAllSize = () =>
+  request({
+    url: '/size',
+    method: 'get'
+  })

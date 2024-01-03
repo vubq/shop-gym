@@ -43,14 +43,12 @@ public class ProductController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    @GetMapping
-    @PreAuthorize("hasRole('ROLE_WAREHOUSE_MANAGEMENT')")
-    public DataTableResponse getAllBySearchCriteria(DataTableRequest dataTableRequest) {
+    @GetMapping("get-list-of-products-by-criteria")
+    public DataTableResponse getListOfProductsByCriteria(DataTableRequest dataTableRequest, @RequestParam(value = "status") String status) {
+        Page<Product> result = this.productService.getListOfProductsByCriteria(dataTableRequest, status);
 
-        Page<Product> result = null;
-        result = this.productService.getAllBySearchCriteria(dataTableRequest);
-
-        return DataTableResponse.build().ok()
+        return DataTableResponse.build()
+                .ok()
                 .totalRows(result.getTotalElements())
                 .items(result.get().toList());
     }

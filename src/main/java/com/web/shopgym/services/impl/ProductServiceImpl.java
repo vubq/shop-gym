@@ -22,13 +22,23 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public Page<Product> getAllBySearchCriteria(DataTableRequest dataTableRequest) {
-        PageRequest pageable = dataTableRequest.toPageable();
+    public Page<Product> getListOfProductsByCriteria(DataTableRequest request, String status) {
+        request.setSortBy("createdAt");
+        request.setSortDesc(true);
+        PageRequest pageable = request.toPageable();
         BaseSpecification<Product> specNameContains = new BaseSpecification<>(
-                SearchCriteria.builder().keys(new String[]{ Product.Fields.name }).operation(SearchOperation.CONTAINS)
-                        .value(dataTableRequest.getFilter().trim().toUpperCase()).build());
-
-        return this.productRepository.findAll(Specification.where(specNameContains), pageable);
+                SearchCriteria.builder()
+                        .keys(new String[]{Product.Fields.name})
+                        .operation(SearchOperation.CONTAINS)
+                        .value(request.getFilter().trim().toUpperCase())
+                        .build());
+        BaseSpecification<Product> specStatusEquality = new BaseSpecification<>(
+                SearchCriteria.builder()
+                        .keys(new String[]{Product.Fields.status})
+                        .operation(SearchOperation.EQUALITY)
+                        .value(status)
+                        .build());
+        return this.productRepository.findAll(Specification.where(specNameContains).and(specStatusEquality), pageable);
     }
 
     @Override

@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,6 +42,9 @@ public class Product {
     @ManyToOne(optional = false)
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
+
+    @Column(name = "created_at")
+    private Date createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

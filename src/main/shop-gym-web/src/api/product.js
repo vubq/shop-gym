@@ -1,8 +1,10 @@
 import request from '@/utils/request'
 
-export const getAllBySearchCriteria = (params) =>
+const ENV = '/product'
+
+export const getListOfProductsByCriteria = (params) =>
   request({
-    url: '/product',
+    url: ENV + '/get-list-of-products-by-criteria',
     method: 'get',
     params
   })

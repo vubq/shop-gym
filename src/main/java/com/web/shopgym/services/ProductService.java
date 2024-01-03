@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    Page<Product> getAllBySearchCriteria(DataTableRequest dataTableRequest);
+    Page<Product> getListOfProductsByCriteria(DataTableRequest dataTableRequest, String status);
 
     Product save(Product product);
 
