@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,6 +48,9 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "created_at")
+    private Date createdAt;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private EUserStatus status;
@@ -54,5 +58,4 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
 }

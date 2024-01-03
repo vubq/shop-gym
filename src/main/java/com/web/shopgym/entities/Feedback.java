@@ -31,12 +31,12 @@ public class Feedback {
     @Column(name = "rate")
     private Double rate;
 
-    @Column(name = "created_date")
-    private Date createdDate;
+    @Column(name = "created_at")
+    private Date createdAt;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id", nullable = false)

@@ -66,4 +66,9 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     public Optional<ProductDetail> findById(String id) {
         return this.productDetailRepository.findById(id);
     }
+
+    @Override
+    public List<ProductDetail> saveAll(List<ProductDetail> productDetails) {
+        return this.productDetailRepository.saveAll(productDetails);
+    }
 }

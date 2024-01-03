@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,6 +39,9 @@ public class OrderDetail {
 
     @Column(name = "is_voucher")
     private Boolean isVoucher;
+
+    @Column(name = "created_at")
+    private Date createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

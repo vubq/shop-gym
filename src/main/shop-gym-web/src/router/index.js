@@ -69,6 +69,21 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/sell-at-the-shop',
+    component: Layout,
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        name: 'sell-at-the-shop.home',
+        component: () => import('@/views/manage-system/sell-at-the-shop'),
+        meta: {
+          icon: 's-home', title: 'Bán tại quầy'
+        }
+      }
+    ]
+  },
+  {
     path: '/product-management',
     meta: {
       icon: 'svg-pifu', title: 'QL Sản phẩm'

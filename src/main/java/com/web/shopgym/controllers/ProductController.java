@@ -71,7 +71,7 @@ public class ProductController {
         productSave.setDescription(dto.getDescription());
         productSave.setBrand(Brand.builder().id(dto.getBrandId()).build());
         productSave.setCategory(Category.builder().id(dto.getCategoryId()).build());
-        productSave.setStatus(EStatus.ACTIVE);
+        productSave.setStatus(dto.getStatus());
         productSave.setImage(dto.getImages().get(0).getUrl());
 
         Product product = this.productService.save(productSave);

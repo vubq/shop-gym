@@ -70,14 +70,15 @@ public class OrderController {
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
                 .createdBy(this.userService.findById(dto.getCreatedBy()).get())
-                .createdDate(new Date())
-                .completedDate(new Date())
+                .createdAt(new Date())
+                .completedAt(new Date())
                 .totalAmount(totalAmount)
                 .voucher(voucher)
                 .status(EOrderStatus.SUCCESS)
                 .build());
 
         List<OrderDetail> orderDetails = new ArrayList<>();
+        List<ProductDetail> productDetails = new ArrayList<>();
         double finalDiscountForProducts = discountForProducts;
         dto.getOrderDetails().forEach(orderDetail -> {
             ProductDetail productDetail = this.productDetailService.findById(orderDetail.getProductDetailId()).get();
@@ -88,12 +89,15 @@ public class OrderController {
                     .quantity(orderDetail.getQuantity())
                     .totalAmount(total > 0 ? total : 0)
                     .isVoucher(voucher == null ? false : true)
+                    .createdAt(new Date())
                     .status(EStatus.ACTIVE)
                     .build());
+            productDetail.setQuantity(productDetail.getQuantity() - orderDetail.getQuantity());
+            productDetails.add(productDetail);
         });
 
         this.orderDetailService.saveAll(orderDetails);
-
+        this.productDetailService.saveAll(productDetails);
         return Response.build().ok().data("OK");
     }
 }

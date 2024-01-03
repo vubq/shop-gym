@@ -41,11 +41,11 @@ public class Order {
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
-    @Column(name = "created_date")
-    private Date createdDate;
+    @Column(name = "created_at")
+    private Date createdAt;
 
-    @Column(name = "completed_date")
-    private Date completedDate;
+    @Column(name = "completed_at")
+    private Date completedAt;
 
     @Column(name = "total_amount")
     private Double totalAmount;

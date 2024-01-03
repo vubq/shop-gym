@@ -24,4 +24,6 @@ public interface ProductDetailService {
     List<String> getAllMaterialIdByProductId(String productId);
 
     List<ProductDetail> getAllProductDetailInOfStock();
+
+    List<ProductDetail> saveAll(List<ProductDetail> productDetails);
 }

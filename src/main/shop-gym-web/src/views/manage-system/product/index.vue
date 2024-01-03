@@ -97,7 +97,7 @@
     />
 
     <el-dialog :title="product.id ? 'Thông tin sản phẩm' : 'Thêm mới sản phẩm'" :visible.sync="showModal" :close-on-click-modal="false" width="90%">
-      <product-detail></product-detail>
+      <product-detail :productId="productId"></product-detail>
       <!-- <el-form v-loading="isLoadingModal">
         <el-form-item label="Tên" label-width="8">
           <el-input autocomplete="off" v-model="color.name"></el-input>
@@ -151,7 +151,8 @@ export default {
         createdAt: new Date(),
         status: Status.ACTIVE
       },
-      listOfProducts: []
+      listOfProducts: [],
+      productId: ''
     }
   },
   methods: {
@@ -178,6 +179,7 @@ export default {
     showProduct(productId) {
       this.showModal = true
       this.isLoadingModal = true
+      this.productId = productId
       // getColorById(colorId)
       //   .then(res => {
       //     if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
@@ -187,6 +189,7 @@ export default {
     },
     showModalCreateProduct() {
       this.showModal = true
+      this.productId = ''
       // this.color = {
       //   id: '',
       //   name: '',

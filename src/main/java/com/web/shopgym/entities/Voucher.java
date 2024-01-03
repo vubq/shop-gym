@@ -46,6 +46,9 @@ public class Voucher {
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
+    @Column(name = "created_at")
+    private Date createdAt;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private EStatus status;

@@ -1,6 +1,7 @@
 package com.web.shopgym.payloads.request;
 
 import com.web.shopgym.entities.Product;
+import com.web.shopgym.enums.EStatus;
 import lombok.*;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class ProductDto {
 
     private List<ImageDto> imageDeletes;
 
+    private EStatus status;
+
     public static ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .id(product.getId())
@@ -36,6 +39,7 @@ public class ProductDto {
                 .price(product.getPrice())
                 .categoryId(product.getCategory().getId())
                 .brandId((product.getBrand().getId()))
+                .status(product.getStatus())
                 .build();
     }
 }
