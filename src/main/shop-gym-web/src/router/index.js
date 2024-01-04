@@ -37,20 +37,20 @@ export const constantRouterMap = [
     component: () => import('@/views/error-page/404'),
     hidden: true
   },
-  {
-    path: '/',
-    // hidden: true,
-    component: Layout,
-    redirect: '/home',
-    children: [
-      {
-        path: 'home',
-        name: 'home',
-        component: () => import('@/views/homepage'),
-        meta: {icon: 's-home', title: '首页'}
-      }
-    ]
-  },
+  // {
+  //   path: '/',
+  //   // hidden: true,
+  //   component: Layout,
+  //   redirect: '/home',
+  //   children: [
+  //     {
+  //       path: 'home',
+  //       name: 'home',
+  //       component: () => import('@/views/homepage'),
+  //       meta: {icon: 's-home', title: '首页'}
+  //     }
+  //   ]
+  // },
   {
     path: '/user',
     component: Layout,

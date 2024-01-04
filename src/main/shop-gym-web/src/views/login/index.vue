@@ -125,7 +125,7 @@ export default {
             //   saveToLocal('password', '')
             //   saveToLocal('remember', false)
             // }
-            this.$router.push({ path: '/home' })
+            this.$router.push({ name: 'sell-at-the-shop.home' })
           }).catch(() => {
             this.loading = false
           })
