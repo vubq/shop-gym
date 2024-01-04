@@ -31,6 +31,9 @@ public class OrderDetail {
     @JoinColumn(name = "product_detail_id", nullable = false)
     private ProductDetail productDetail;
 
+    @Column(name = "product_price")
+    private Double productPrice;
+
     @Column(name = "quantity")
     private Integer quantity;
 

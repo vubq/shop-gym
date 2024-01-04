@@ -244,20 +244,21 @@ export default {
         cancelButtonText: 'Hủy',
         type: 'warning'
       }).then(() => {
-        this.isLoading = true
-        const user = JSON.parse(localStorage.getItem('user'))
+        this.$emit('update:isLoading', true)
         if(this.allInfor.id) {
           this.bill.createdBy = this.allInfor.id
-          this.bill.type = 'ONLINE'
+          this.bill.type = 'AT_THE_SHOP'
           if(this.voucher) {
             this.bill.voucherId = this.voucher.id
           }
           createInvoice(this.bill).then((res) => {
             if(res.data && res.data.code === 0) {
               this.$emit('remove-tab', this.bill.id)
+              this.$emit('update:isLoading', false)
+              window.scrollTo(0, 0)
             }
-          }).finally(() => (this.isLoading = false))
-          console.log(this.bill)
+          })
+          this.$emit('update:isLoading', false)
         }
       }).catch(() => {
         console.log('a')

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="isLoading">
     <el-row style="margin-top: 20px; display: flex" :gutter="40">
       <el-col :span="8" style="background-color: #fff; border-radius: 4px; text-align: center;">
         <el-upload
@@ -347,6 +347,9 @@ export default {
     productId: {
       type: String,
       default: ''
+    },
+    showModal: {
+      type: Boolean
     }
   },
   watch: {
@@ -423,11 +426,13 @@ export default {
       disabled: false,
       listImage: [],
       listImageDelete: [],
-      Status: Status
+      Status: Status,
+      isLoading: false
     }
   },
   methods: {
     async createOrUpdateProduct() {
+      this.isLoading = true
       const images = []
       for (const image of this.$refs.imageProductUpload.uploadFiles) {
         if(image.raw) {
@@ -450,7 +455,15 @@ export default {
       this.product.images = images
 
       await createProduct(this.product).then((res) => {
-        console.log(res)
+        if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
+          this.$emit('update:showModal', false)
+          this.$emit('reload-table')
+          this.isLoading = false
+        }
+      }).finally(() => {
+        this.$emit('update:showModal', false)
+        this.$emit('reload-table', null)
+        this.isLoading = false
       })
     },
     handleRemove(file) {
@@ -546,6 +559,7 @@ export default {
     }
   },
   created() {
+    this.isLoading = true
     if(this.productId) {
       getProductDetailByProductId(this.productId).then((res) => {
         this.product = res.data
@@ -594,6 +608,7 @@ export default {
         this.listBrand = res.data
       }
     })
+    this.isLoading = false
   }
 }
 </script>

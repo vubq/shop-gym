@@ -8,16 +8,19 @@ import com.web.shopgym.entities.Voucher;
 import com.web.shopgym.enums.EOrderStatus;
 import com.web.shopgym.enums.EStatus;
 import com.web.shopgym.enums.EVoucherType;
+import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.payloads.request.OrderDto;
+import com.web.shopgym.payloads.response.DataTableResponse;
 import com.web.shopgym.payloads.response.Response;
 import com.web.shopgym.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -43,7 +46,7 @@ public class OrderController {
     public Response createInvoice(@RequestBody OrderDto dto) {
 
         Voucher voucher;
-        if(!StringUtils.isEmpty(dto.getVoucherId())) {
+        if (!StringUtils.isEmpty(dto.getVoucherId())) {
             voucher = this.voucherService.findById(dto.getVoucherId()).get();
         } else {
             voucher = null;
@@ -55,11 +58,11 @@ public class OrderController {
 
         double discountForProducts = 0;
 
-        if(voucher != null && voucher.getType() == EVoucherType.MONEY) {
+        if (voucher != null && voucher.getType() == EVoucherType.MONEY) {
             discountForProducts = voucher.getValue() / dto.getOrderDetails().size();
             totalAmount = totalAmount - voucher.getValue();
         }
-        if(voucher != null && voucher.getType() == EVoucherType.PERCENT) {
+        if (voucher != null && voucher.getType() == EVoucherType.PERCENT) {
             discountForProducts = (totalAmount * voucher.getValue() / 100) / dto.getOrderDetails().size();
             totalAmount = totalAmount - totalAmount * voucher.getValue() / 100;
         }
@@ -91,6 +94,7 @@ public class OrderController {
                     .isVoucher(voucher == null ? false : true)
                     .createdAt(new Date())
                     .status(EStatus.ACTIVE)
+                    .productPrice(productDetail.getPrice())
                     .build());
             productDetail.setQuantity(productDetail.getQuantity() - orderDetail.getQuantity());
             productDetails.add(productDetail);
@@ -99,5 +103,25 @@ public class OrderController {
         this.orderDetailService.saveAll(orderDetails);
         this.productDetailService.saveAll(productDetails);
         return Response.build().ok().data("OK");
+    }
+
+    @GetMapping("get-list-of-orders-by-criteria-sell-at-the-shop")
+    public DataTableResponse getListOfOrdersByCriteriaSellAtTheShop(DataTableRequest request, @RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo) {
+        Page<Order> result = this.orderService.getListOfOrdersByCriteriaSellAtTheShop(request, dateFrom, dateTo);
+
+        return DataTableResponse.build()
+                .ok()
+                .totalRows(result.getTotalElements())
+                .items(result.get().toList());
+    }
+
+    @GetMapping("get-order-details-by-order-id/{orderId}")
+    public Response getOrderDetailsByOrderId(@PathVariable(value = "orderId") String orderId) {
+        Order order = this.orderService.findById(orderId).orElse(null);
+        List<OrderDetail> orderDetails = this.orderDetailService.getListOfOrderDetailsByOrderId(orderId);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("order", order);
+        hashMap.put("orderDetails", orderDetails);
+        return Response.build().ok().data(hashMap);
     }
 }

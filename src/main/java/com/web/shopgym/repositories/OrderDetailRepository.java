@@ -2,6 +2,11 @@ package com.web.shopgym.repositories;
 
 import com.web.shopgym.entities.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, String> {
+    @Query(value = "SELECT od FROM OrderDetail od WHERE od.order.id = :orderId")
+    List<OrderDetail> findAllByOrderId(String orderId);
 }

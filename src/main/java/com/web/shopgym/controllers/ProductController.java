@@ -23,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public class ProductController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> createProduct(@RequestBody ProductDto dto) {
+    public Response createProduct(@RequestBody ProductDto dto) {
 
         Product productSave = new Product();
         if(!Strings.isEmpty(dto.getId())) {
@@ -73,6 +74,7 @@ public class ProductController {
         productSave.setCategory(Category.builder().id(dto.getCategoryId()).build());
         productSave.setStatus(dto.getStatus());
         productSave.setImage(dto.getImages().get(0).getUrl());
+        productSave.setCreatedAt(new Date());
 
         Product product = this.productService.save(productSave);
 
@@ -90,7 +92,7 @@ public class ProductController {
             }
         });
 
-        if(product == null) return new ResponseEntity<>("ERROR", HttpStatus.OK);
+        if(product == null) return Response.build().code(Response.CODE_INTERNAL_ERROR);
 
         dto.getProductDetails().forEach((productDetailDto) -> {
             ProductDetail productDetailSave = ProductDetail.builder()
@@ -101,6 +103,7 @@ public class ProductController {
                     .size(Size.builder().id(productDetailDto.getSizeId()).build())
                     .color(Color.builder().id(productDetailDto.getColorId()).build())
                     .material(Material.builder().id(productDetailDto.getMaterialId()).build())
+                    .createdAt(new Date())
                     .status(EStatus.ACTIVE).build();
             if(!Strings.isEmpty(productDetailDto.getId())) {
                 productDetailSave.setId(productDetailDto.getId());
@@ -136,7 +139,7 @@ public class ProductController {
         }
         this.imageService.deleteAll(imageDeletes);
 
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return Response.build().ok();
     }
 
     @GetMapping("product-detail/{productId}")

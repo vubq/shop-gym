@@ -97,7 +97,7 @@
     />
 
     <el-dialog :title="product.id ? 'Thông tin sản phẩm' : 'Thêm mới sản phẩm'" :visible.sync="showModal" :close-on-click-modal="false" width="90%">
-      <product-detail :productId="productId"></product-detail>
+      <product-detail :productId="productId" :showModal.sync="showModal" @reload-table="reloadTable()"></product-detail>
       <!-- <el-form v-loading="isLoadingModal">
         <el-form-item label="Tên" label-width="8">
           <el-input autocomplete="off" v-model="color.name"></el-input>

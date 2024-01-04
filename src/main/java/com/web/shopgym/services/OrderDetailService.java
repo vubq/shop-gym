@@ -7,4 +7,6 @@ import java.util.List;
 public interface OrderDetailService {
 
     List<OrderDetail> saveAll(List<OrderDetail> orderDetails);
+
+    List<OrderDetail> getListOfOrderDetailsByOrderId(String orderId);
 }

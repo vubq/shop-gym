@@ -24,7 +24,7 @@
         :label="o.fullNameCustomer"
         :name="o.id"
       >
-        <bill :bill="o" :isLoading="isLoading" @remove-tab="removeTab"></bill>
+        <bill :bill="o" :isLoading.sync="isLoading" @remove-tab="removeTab"></bill>
       </el-tab-pane>
     </el-tabs>
   </div>

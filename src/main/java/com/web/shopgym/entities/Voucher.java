@@ -3,10 +3,7 @@ package com.web.shopgym.entities;
 import com.web.shopgym.enums.EStatus;
 import com.web.shopgym.enums.EVoucherType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -17,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldNameConstants
+@Builder
 @Entity
 @Table(name="vouchers")
 public class Voucher {

@@ -140,12 +140,51 @@ export const constantRouterMap = [
         }
       }
     ]
+  },
+  {
+    path: '/voucher',
+    component: Layout,
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        name: 'voucher.home',
+        component: () => import('@/views/manage-system/voucher'),
+        meta: {
+          icon: 's-home', title: 'QL Voucher'
+        }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/order-at-the-shop',
+    meta: {
+      icon: 'svg-pifu', title: 'QL Hóa đơn'
+    },
+    children: [
+      {
+        path: 'order-at-the-shop',
+        name: 'order.order-at-the-shop',
+        component: () => import('@/views/manage-system/order-at-the-shop'),
+        meta: {
+          icon: 's-home', title: 'Hóa đơn tại quầy'
+        }
+      }
+    ]
   }
 ]
 
 export default new Router({
   mode: 'history',
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: (to, from, savedPosition) => {
+    if (to.hash) {
+      return {selector: to.hash}
+    } else {
+      return {x: 0, y: 0}
+    }
+  },
   routes: constantRouterMap
 })
 
