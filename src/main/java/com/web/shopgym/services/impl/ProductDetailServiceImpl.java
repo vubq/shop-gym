@@ -7,6 +7,10 @@ import com.web.shopgym.services.ProductDetailService;
 import com.web.shopgym.utils.BaseSpecification;
 import com.web.shopgym.utils.SearchCriteria;
 import com.web.shopgym.utils.SearchOperation;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +34,41 @@ public class ProductDetailServiceImpl implements ProductDetailService {
                         .value(dataTableRequest.getFilter().trim().toUpperCase()).build());
 
         return this.productDetailRepository.findAll(Specification.where(specCodeContains), pageable);
+    }
+
+    @Override
+    public Page<ProductDetail> getListOfProductDetailsByCriteriaWebShop(DataTableRequest dataTableRequest, List<String> categories, List<String> sizes, List<String> colors, List<String> materials) {
+        PageRequest pageable = dataTableRequest.toPageable();
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder criteriaBuilder) {
+                return null;
+            }
+        };
+        specification.and(new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder criteriaBuilder) {
+                query.distinct(true);
+                query.groupBy(root.get("product"));
+
+                if(categories.size() > 0) {
+                    criteriaBuilder.or(
+                            c
+                    )
+                }
+                return null;
+            }
+        });
+        for (int i = 1; i < categories.size(); i++) {
+
+        }
+        categories.forEach(e -> {
+            specification.and(new BaseSpecification<>(
+                    SearchCriteria.builder().keys(new String[]{ProductDetail.Fields.product}).operation(SearchOperation.EQUALITY)
+                            .value(e).build()));
+        });
+
+        return this.productDetailRepository.findAll(Specification.where(specification), pageable);
     }
 
     @Override

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Login from '@/views/login'
 import Layout from '@/layout/layout'
+import LayoutWebShop from '@/layout-web-shop/layout'
 
 Vue.use(Router)
 
@@ -36,6 +37,19 @@ export const constantRouterMap = [
     path: '/404',
     component: () => import('@/views/error-page/404'),
     hidden: true
+  },
+  {
+    path: '/',
+    hidden: true,
+    component: LayoutWebShop,
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        name: 'home',
+        component: () => import('@/views/web-shop/home')
+      }
+    ]
   },
   // {
   //   path: '/',

@@ -3,10 +3,7 @@ package com.web.shopgym.controllers;
 import com.web.shopgym.entities.*;
 import com.web.shopgym.enums.EImageType;
 import com.web.shopgym.enums.EStatus;
-import com.web.shopgym.payloads.request.ImageDto;
-import com.web.shopgym.payloads.request.ProductDetailDto;
-import com.web.shopgym.payloads.request.ProductDto;
-import com.web.shopgym.payloads.request.DataTableRequest;
+import com.web.shopgym.payloads.request.*;
 import com.web.shopgym.payloads.response.DataTableResponse;
 import com.web.shopgym.payloads.response.Response;
 import com.web.shopgym.services.CloudinaryService;
@@ -166,5 +163,15 @@ public class ProductController {
         }
 
         return Response.build().ok().data(products);
+    }
+
+    @GetMapping("web-shop/get-list-of-products-by-criteria")
+    public DataTableResponse getListOfProductsByCriteriaWebShop(DataTableRequest dataTableRequest, @RequestBody ProductWebShopRequest productWebShopRequest) {
+        Page<ProductDetail> result = this.productDetailService.getListOfProductDetailsByCriteriaWebShop(dataTableRequest, productWebShopRequest.getCategories(), productWebShopRequest.getSizes(), productWebShopRequest.getColor(), productWebShopRequest.getMaterials());
+
+        return DataTableResponse.build()
+                .ok()
+                .totalRows(result.getTotalElements())
+                .items(result.get().toList());
     }
 }
