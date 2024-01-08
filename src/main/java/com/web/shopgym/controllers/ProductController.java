@@ -165,13 +165,29 @@ public class ProductController {
         return Response.build().ok().data(products);
     }
 
-    @GetMapping("web-shop/get-list-of-products-by-criteria")
+    @GetMapping("get-list-of-products-by-criteria-web-shop")
     public DataTableResponse getListOfProductsByCriteriaWebShop(DataTableRequest dataTableRequest, @RequestBody ProductWebShopRequest productWebShopRequest) {
-        Page<ProductDetail> result = this.productDetailService.getListOfProductDetailsByCriteriaWebShop(dataTableRequest, productWebShopRequest.getCategories(), productWebShopRequest.getSizes(), productWebShopRequest.getColor(), productWebShopRequest.getMaterials());
+        Page<ProductDetail> result = this.productDetailService.getListOfProductDetailsByCriteriaWebShop(
+                dataTableRequest,
+                productWebShopRequest.getCategories(),
+                productWebShopRequest.getSizes(),
+                productWebShopRequest.getColors(),
+                productWebShopRequest.getMaterials(),
+                productWebShopRequest.getPriceApprox());
 
         return DataTableResponse.build()
                 .ok()
                 .totalRows(result.getTotalElements())
-                .items(result.get().toList());
+                .items(result.get().map(productDetail -> Product.builder()
+                        .id(productDetail.getProduct().getId())
+                        .name(productDetail.getProduct().getName())
+                        .description(productDetail.getProduct().getDescription())
+                        .price(productDetail.getProduct().getPrice())
+                        .brand(productDetail.getProduct().getBrand())
+                        .category(productDetail.getProduct().getCategory())
+                        .image(productDetail.getProduct().getImage())
+                        .createdAt(productDetail.getProduct().getCreatedAt())
+                        .status(productDetail.getProduct().getStatus())
+                        .build()).toList());
     }
 }

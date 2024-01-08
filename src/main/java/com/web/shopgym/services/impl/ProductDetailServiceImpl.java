@@ -1,22 +1,20 @@
 package com.web.shopgym.services.impl;
 
-import com.web.shopgym.entities.ProductDetail;
+import com.web.shopgym.entities.*;
 import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.repositories.ProductDetailRepository;
 import com.web.shopgym.services.ProductDetailService;
 import com.web.shopgym.utils.BaseSpecification;
 import com.web.shopgym.utils.SearchCriteria;
 import com.web.shopgym.utils.SearchOperation;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,38 +35,46 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     }
 
     @Override
-    public Page<ProductDetail> getListOfProductDetailsByCriteriaWebShop(DataTableRequest dataTableRequest, List<String> categories, List<String> sizes, List<String> colors, List<String> materials) {
+    public Page<ProductDetail> getListOfProductDetailsByCriteriaWebShop(
+            DataTableRequest dataTableRequest,
+            List<String> categories,
+            List<String> sizes,
+            List<String> colors,
+            List<String> materials,
+            List<Double> priceApprox) {
         PageRequest pageable = dataTableRequest.toPageable();
         Specification specification = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder criteriaBuilder) {
+                query.distinct(true);
+                query.groupBy(root.get("product"));
+                List<Predicate> predicates = new ArrayList<>();
+                Join<ProductDetail, Product> productDetailProductJoin = root.join("product");
+                Join<ProductDetail, Size> productDetailSizeJoin = root.join("size");
+                Join<ProductDetail, Color> productDetailColorJoin = root.join("color");
+                Join<ProductDetail, Material> productDetailMaterialJoin = root.join("material");
+                predicates.add(criteriaBuilder.like(criteriaBuilder.upper(productDetailProductJoin.get("name")), "%" + dataTableRequest.getFilter() + "%"));
+                if (categories.size() > 0) {
+                    predicates.add(criteriaBuilder.and(productDetailProductJoin.get("category").get("id").in(categories)));
+                }
+                if (sizes.size() > 0) {
+                    predicates.add(criteriaBuilder.and(productDetailSizeJoin.get("id").in(sizes)));
+                }
+                if (colors.size() > 0) {
+                    predicates.add(criteriaBuilder.and(productDetailColorJoin.get("id").in(colors)));
+                }
+                if (materials.size() > 0) {
+                    predicates.add(criteriaBuilder.and(productDetailMaterialJoin.get("id").in(materials)));
+                }
+                if(priceApprox.size() == 2) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(productDetailProductJoin.get("price"), priceApprox.get(0))));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(productDetailProductJoin.get("price"), priceApprox.get(1))));
+                }
+                query.where(predicates.toArray(new Predicate[]{}));
                 return null;
             }
         };
-        specification.and(new Specification() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder criteriaBuilder) {
-                query.distinct(true);
-                query.groupBy(root.get("product"));
-
-                if(categories.size() > 0) {
-                    criteriaBuilder.or(
-                            c
-                    )
-                }
-                return null;
-            }
-        });
-        for (int i = 1; i < categories.size(); i++) {
-
-        }
-        categories.forEach(e -> {
-            specification.and(new BaseSpecification<>(
-                    SearchCriteria.builder().keys(new String[]{ProductDetail.Fields.product}).operation(SearchOperation.EQUALITY)
-                            .value(e).build()));
-        });
-
-        return this.productDetailRepository.findAll(Specification.where(specification), pageable);
+        return this.productDetailRepository.findAll(specification, pageable);
     }
 
     @Override

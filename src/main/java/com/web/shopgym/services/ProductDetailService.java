@@ -14,7 +14,13 @@ public interface ProductDetailService {
 
     Page<ProductDetail> getAllBySearchCriteria(DataTableRequest dataTableRequest);
 
-    Page<ProductDetail> getListOfProductDetailsByCriteriaWebShop(DataTableRequest dataTableRequest, List<String> categories, List<String> sizes, List<String> colors, List<String> materials);
+    Page<ProductDetail> getListOfProductDetailsByCriteriaWebShop(
+            DataTableRequest dataTableRequest,
+            List<String> categories,
+            List<String> sizes,
+            List<String> colors,
+            List<String> materials,
+            List<Double> priceApprox);
 
     ProductDetail save(ProductDetail productDetail);
 

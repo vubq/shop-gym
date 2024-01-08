@@ -14,7 +14,8 @@ import java.util.List;
 public class ProductWebShopRequest {
 
     List<String> sizes;
-    List<String> color;
+    List<String> colors;
     List<String> materials;
     List<String> categories;
+    List<Double> priceApprox;
 }
