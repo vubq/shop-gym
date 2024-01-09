@@ -33,6 +33,6 @@ export default {
     overflow-x hidden
   .main-container
 
-    padding-top 61px
+    padding-top 56px
     background-color #fefefe
 </style>

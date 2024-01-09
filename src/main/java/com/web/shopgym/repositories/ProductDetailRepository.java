@@ -37,5 +37,5 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, St
     List<String> findAllColorIdByProductIdInOfStock(String productId);
 
     @Query(value = "SELECT DISTINCT pd.material.id FROM ProductDetail pd WHERE pd.product.id = :productId AND pd.quantity > 0")
-    List<String> findAllMaterilIdByProductIdInOfStock(String productId);
+    List<String> findAllMaterialIdByProductIdInOfStock(String productId);
 }

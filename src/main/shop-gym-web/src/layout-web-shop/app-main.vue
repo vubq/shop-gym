@@ -1,5 +1,5 @@
 <template>
-  <div class="main-app">
+  <div style="background-color: #f0f2f5; min-height: calc(100vh - 56px);">
     <transition name="fade" enter-active-class="animated fadeIn" mode="out-in">
       <keep-alive>
         <router-view :key="key"></router-view>

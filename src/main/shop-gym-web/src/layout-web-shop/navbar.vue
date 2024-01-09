@@ -97,7 +97,10 @@ export default {
   width 100%
   z-index 10
   .el-menu
+    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1)
     border-bottom: none !important
+    background-color: #fff
+    padding: 0 10% 0 10%
     .lang-select
       position absolute
       top 18px
@@ -108,7 +111,7 @@ export default {
     .avatar-container
       position absolute
       top 15px
-      right 40px
+      right 10%
       .avatar-wrapper
         cursor pointer
     .avatar-container /deep/ .user-avatar

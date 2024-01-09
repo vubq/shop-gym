@@ -17,4 +17,10 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     @Query(value = "SELECT DISTINCT p.id FROM Product p JOIN ProductDetail pd ON p.id = pd.product.id WHERE pd.quantity > 0")
     List<String> getAllProductIdInOfStock();
+
+    @Query(value = "SELECT p FROM Product p JOIN ProductDetail pd ON p.id = pd.product.id JOIN OrderDetail od ON od.productDetail.id = pd.id GROUP BY p.id ORDER BY SUM(od.quantity) DESC LIMIT 10")
+    List<Product> getTopQuantitySellProduct();
+
+    @Query(value = "SELECT p FROM Product p JOIN Feedback f ON p.id = f.product.id GROUP BY p.id ORDER BY AVG(f.rate) DESC LIMIT 10")
+    List<Product> getTopRateProduct();
 }
