@@ -15,6 +15,7 @@ public class ProductWebShopRequest {
 
     List<String> sizes;
     List<String> colors;
+    List<String> brands;
     List<String> materials;
     List<String> categories;
     List<Double> priceApprox;

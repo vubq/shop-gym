@@ -33,3 +33,17 @@ export const getProductById = (id) =>
     url: '/product/' + id,
     method: 'get'
   })
+
+export const getListOfProductsByCriteriaWebShop = (params, data) =>
+  request({
+    url: ENV + '/get-list-of-products-by-criteria-web-shop',
+    method: 'post',
+    params,
+    data
+  })
+
+export const getProductByIdWebShop = (id) =>
+  request({
+    url: ENV + '/get-product-by-id-web-shop/' + id,
+    method: 'get'
+  })

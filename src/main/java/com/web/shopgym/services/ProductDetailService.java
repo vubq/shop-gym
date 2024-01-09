@@ -20,6 +20,7 @@ public interface ProductDetailService {
             List<String> sizes,
             List<String> colors,
             List<String> materials,
+            List<String> brands,
             List<Double> priceApprox);
 
     ProductDetail save(ProductDetail productDetail);
@@ -35,4 +36,6 @@ public interface ProductDetailService {
     List<ProductDetail> getAllProductDetailInOfStock();
 
     List<ProductDetail> saveAll(List<ProductDetail> productDetails);
+
+    Integer getQuantityOfProductAvailable(String productId);
 }

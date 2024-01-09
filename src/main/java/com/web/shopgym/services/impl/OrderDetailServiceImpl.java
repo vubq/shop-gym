@@ -23,4 +23,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public List<OrderDetail> getListOfOrderDetailsByOrderId(String orderId) {
         return this.orderDetailRepository.findAllByOrderId(orderId);
     }
+
+    @Override
+    public Integer getQuantitySold(String productId) {
+        Integer quantitySold = this.orderDetailRepository.getQuantitySold(productId);
+        return quantitySold == null ? 0 : quantitySold;
+    }
 }

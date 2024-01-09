@@ -1,6 +1,7 @@
 package com.web.shopgym.services.impl;
 
 import com.web.shopgym.entities.Image;
+import com.web.shopgym.enums.EImageType;
 import com.web.shopgym.repositories.ImageRepository;
 import com.web.shopgym.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,10 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<Image> getAllBySecondaryId(String secondaryId) {
         return this.imageRepository.findAllBySecondaryId(secondaryId);
+    }
+
+    @Override
+    public List<Image> findAllBySecondaryIdAndType(String secondaryId, EImageType type) {
+        return this.imageRepository.findAllBySecondaryIdAndType(secondaryId, type);
     }
 }

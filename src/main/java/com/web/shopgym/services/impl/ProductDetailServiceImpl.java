@@ -41,6 +41,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
             List<String> sizes,
             List<String> colors,
             List<String> materials,
+            List<String> brands,
             List<Double> priceApprox) {
         PageRequest pageable = dataTableRequest.toPageable();
         Specification specification = new Specification() {
@@ -53,9 +54,12 @@ public class ProductDetailServiceImpl implements ProductDetailService {
                 Join<ProductDetail, Size> productDetailSizeJoin = root.join("size");
                 Join<ProductDetail, Color> productDetailColorJoin = root.join("color");
                 Join<ProductDetail, Material> productDetailMaterialJoin = root.join("material");
-                predicates.add(criteriaBuilder.like(criteriaBuilder.upper(productDetailProductJoin.get("name")), "%" + dataTableRequest.getFilter() + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.upper(productDetailProductJoin.get("name")), "%" + dataTableRequest.getFilter().trim().toUpperCase() + "%"));
                 if (categories.size() > 0) {
                     predicates.add(criteriaBuilder.and(productDetailProductJoin.get("category").get("id").in(categories)));
+                }
+                if (brands.size() > 0) {
+                    predicates.add(criteriaBuilder.and(productDetailProductJoin.get("brand").get("id").in(brands)));
                 }
                 if (sizes.size() > 0) {
                     predicates.add(criteriaBuilder.and(productDetailSizeJoin.get("id").in(sizes)));
@@ -115,5 +119,11 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Override
     public List<ProductDetail> saveAll(List<ProductDetail> productDetails) {
         return this.productDetailRepository.saveAll(productDetails);
+    }
+
+    @Override
+    public Integer getQuantityOfProductAvailable(String productId) {
+        Integer quantity = this.productDetailRepository.getQuantityOfProductAvailable(productId);
+        return quantity == null ? 0 : quantity;
     }
 }

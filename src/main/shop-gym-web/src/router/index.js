@@ -53,6 +53,12 @@ export const constantRouterMap = [
         path: 'filter-product',
         name: 'filter-product',
         component: () => import('@/views/web-shop/filter-product')
+      },
+      {
+        path: 'product/:id',
+        name: 'product',
+        component: () => import('@/views/web-shop/product'),
+        params: true
       }
     ]
   },

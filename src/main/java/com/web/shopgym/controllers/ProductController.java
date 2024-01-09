@@ -1,15 +1,13 @@
 package com.web.shopgym.controllers;
 
+import com.web.shopgym.dtos.ProductWebShopDTO;
 import com.web.shopgym.entities.*;
 import com.web.shopgym.enums.EImageType;
 import com.web.shopgym.enums.EStatus;
 import com.web.shopgym.payloads.request.*;
 import com.web.shopgym.payloads.response.DataTableResponse;
 import com.web.shopgym.payloads.response.Response;
-import com.web.shopgym.services.CloudinaryService;
-import com.web.shopgym.services.ImageService;
-import com.web.shopgym.services.ProductDetailService;
-import com.web.shopgym.services.ProductService;
+import com.web.shopgym.services.*;
 import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,12 @@ public class ProductController {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private FeedbackService feedbackService;
+
+    @Autowired
+    private OrderDetailService orderDetailService;
 
     @GetMapping("get-list-of-products-by-criteria")
     public DataTableResponse getListOfProductsByCriteria(DataTableRequest dataTableRequest, @RequestParam(value = "status") String status) {
@@ -165,7 +169,7 @@ public class ProductController {
         return Response.build().ok().data(products);
     }
 
-    @GetMapping("get-list-of-products-by-criteria-web-shop")
+    @PostMapping("get-list-of-products-by-criteria-web-shop")
     public DataTableResponse getListOfProductsByCriteriaWebShop(DataTableRequest dataTableRequest, @RequestBody ProductWebShopRequest productWebShopRequest) {
         Page<ProductDetail> result = this.productDetailService.getListOfProductDetailsByCriteriaWebShop(
                 dataTableRequest,
@@ -173,12 +177,13 @@ public class ProductController {
                 productWebShopRequest.getSizes(),
                 productWebShopRequest.getColors(),
                 productWebShopRequest.getMaterials(),
+                productWebShopRequest.getBrands(),
                 productWebShopRequest.getPriceApprox());
 
         return DataTableResponse.build()
                 .ok()
                 .totalRows(result.getTotalElements())
-                .items(result.get().map(productDetail -> Product.builder()
+                .items(result.get().map(productDetail -> ProductWebShopDTO.builder()
                         .id(productDetail.getProduct().getId())
                         .name(productDetail.getProduct().getName())
                         .description(productDetail.getProduct().getDescription())
@@ -187,7 +192,29 @@ public class ProductController {
                         .category(productDetail.getProduct().getCategory())
                         .image(productDetail.getProduct().getImage())
                         .createdAt(productDetail.getProduct().getCreatedAt())
+                        .rate(this.feedbackService.getRateProduct(productDetail.getProduct().getId()))
+                        .quantitySold(this.orderDetailService.getQuantitySold(productDetail.getProduct().getId()))
                         .status(productDetail.getProduct().getStatus())
                         .build()).toList());
+    }
+
+    @GetMapping("get-product-by-id-web-shop/{id}")
+    public Response getProductByIdWebShop(@PathVariable(value = "id") String id) {
+        Product product = this.productService.getById(id);
+        return Response.build().ok().data(ProductWebShopDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .brand(product.getBrand())
+                .category(product.getCategory())
+                .image(product.getImage())
+                .createdAt(product.getCreatedAt())
+                .rate(this.feedbackService.getRateProduct(product.getId()))
+                .quantitySold(this.orderDetailService.getQuantitySold(product.getId()))
+                .status(product.getStatus())
+                .quantityOfProductAvailable(this.productDetailService.getQuantityOfProductAvailable(product.getId()))
+                .listImage(this.imageService.findAllBySecondaryIdAndType(product.getId(), EImageType.PRODUCT).stream().map(Image::getUrl).toList())
+                .build());
     }
 }

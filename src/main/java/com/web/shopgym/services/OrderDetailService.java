@@ -9,4 +9,6 @@ public interface OrderDetailService {
     List<OrderDetail> saveAll(List<OrderDetail> orderDetails);
 
     List<OrderDetail> getListOfOrderDetailsByOrderId(String orderId);
+
+    Integer getQuantitySold(String productId);
 }

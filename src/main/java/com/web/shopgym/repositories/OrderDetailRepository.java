@@ -9,4 +9,7 @@ import java.util.List;
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, String> {
     @Query(value = "SELECT od FROM OrderDetail od WHERE od.order.id = :orderId")
     List<OrderDetail> findAllByOrderId(String orderId);
+
+    @Query(value = "SELECT SUM(od.quantity) FROM OrderDetail od WHERE od.productDetail.product.id = :productId")
+    Integer getQuantitySold(String productId);
 }

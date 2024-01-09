@@ -4,12 +4,23 @@
       mode="horizontal" 
       text-color="#fff"
       active-text-color="#fff">
-      <router-link to="/home" style="display: flex;">
-        <div style="padding: 10px 0px 10px 20px;">
-          <el-image src="../../../static/image/logo/logo.jpg" style="width: 32.7px; border-radius: 4px;"></el-image>
-        </div>
-        <el-menu-item index="1" class="title-name" style="padding-left: 10px;">NoLan Shop</el-menu-item>
-      </router-link>
+      <div style="display: flex; align-items: center;">
+        <router-link to="/home" >
+          <div>
+            <el-image src="../../../static/image/logo/logo-web-shop.jpg" style="width: 120px; border-radius: 4px;"></el-image>
+          </div>
+        </router-link>
+        <el-menu-item index="1" style="padding-left: 20px; padding-right: 0; color: #000; font-size: 16px; font-weight: 500;">TRANG CHỦ</el-menu-item>
+        <el-menu-item index="2" style="padding-left: 20px; padding-right: 0; color: #000; font-size: 16px; font-weight: 500;">GIỚI THIỆU</el-menu-item>
+        <el-menu-item index="3" style="padding-left: 20px; padding-right: 0; color: #000; font-size: 16px; font-weight: 500;">LIÊN HỆ</el-menu-item>
+        <el-menu-item v-if="name !== 'filter-product'" index="3" style="padding-left: 100px; padding-right: 0; color: #000; font-size: 16px;">
+          <div style="display: flex;">
+            <el-input class="search" style="display: block; width: 300px;" placeholder="Nhập sản phẩm cần tìm" v-model="searchProduct">
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="pushSearchProduct()"></i>
+            </el-input>
+          </div>
+        </el-menu-item>
+      </div>
       
       <!-- <change-theme class="theme-container"></change-theme>
 
@@ -22,6 +33,12 @@
       </div> -->
 
       <div class="avatar-container">
+        <div style="margin-right: 30px; cursor: pointer;">
+          <el-badge :value="1" :max="99" class="item" style="margin-right: 15px;">
+            <i class="el-icon-shopping-cart-full" style="background-color: #f0f2f5; padding: 5px; border-radius: 5px;"></i>
+          </el-badge>
+          Giỏ hàng
+        </div>
         <el-dropdown trigger="click">
           <div class="avatar-wrapper">
             <img class="user-avatar" :src="allInfor.avatar">
@@ -58,6 +75,12 @@ import Screenfull from '@/components/screenfull'
 import ChangeTheme from '@/components/theme'
 export default {
   name: '',
+  data() {
+    return {
+      searchProduct: '',
+      name: this.$route.name
+    }
+  },
   components: {
     LangSelect,
     Screenfull,
@@ -84,6 +107,14 @@ export default {
       }).finally(() => {
         loading.close()
       })
+    },
+    pushSearchProduct() {
+      this.$router.push({
+        name: 'filter-product',
+        params: {
+          searchProduct: this.searchProduct
+        }
+      })
     }
   },
   created() {
@@ -91,6 +122,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.search .el-input__inner {
+  border: 0;
+  background-color: #f0f2f5;
+  border-radius: 5px;
+}
+</style>
 <style lang="stylus" scoped>
 .top-navbar
   position fixed
@@ -100,7 +139,7 @@ export default {
     box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1)
     border-bottom: none !important
     background-color: #fff
-    padding: 0 10% 0 10%
+    padding: 0 50px 0 50px
     .lang-select
       position absolute
       top 18px
@@ -109,9 +148,11 @@ export default {
       font-size 20px  
       color #fff
     .avatar-container
+      display flex
+      align-items center
       position absolute
       top 15px
-      right 10%
+      right 50px
       .avatar-wrapper
         cursor pointer
     .avatar-container /deep/ .user-avatar
@@ -123,7 +164,7 @@ export default {
         display inline-block
         height 30px
         line-height 30px
-        color #fff
+        color #000
 
 .top-navbar /deep/ .el-menu-item {
   font-size 20px
