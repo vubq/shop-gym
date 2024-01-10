@@ -16,4 +16,8 @@ public interface MaterialService {
     Optional<Material> findById(String id);
 
     Material save(Material material);
+
+    List<String> getAllByProductId(String productId);
+
+    List<Material> getProductInStock(String productId, String materialId);
 }

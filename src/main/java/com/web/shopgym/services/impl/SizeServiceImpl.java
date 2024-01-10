@@ -56,4 +56,14 @@ public class SizeServiceImpl implements SizeService {
     public Size save(Size size) {
         return this.sizeRepository.save(size);
     }
+
+    @Override
+    public List<String> getAllByProductId(String productId) {
+        return this.sizeRepository.getAllByProductId(productId);
+    }
+
+    @Override
+    public List<Size> getProductInStock(String productId, String sizeId) {
+        return this.sizeRepository.getProductInStock(productId, sizeId);
+    }
 }

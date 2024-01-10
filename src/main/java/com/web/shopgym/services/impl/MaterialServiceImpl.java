@@ -56,4 +56,14 @@ public class MaterialServiceImpl implements MaterialService {
     public Material save(Material material) {
         return this.materialRepository.save(material);
     }
+
+    @Override
+    public List<String> getAllByProductId(String productId) {
+        return this.materialRepository.getAllByProductId(productId);
+    }
+
+    @Override
+    public List<Material> getProductInStock(String productId, String materialId) {
+        return this.materialRepository.getProductInStock(productId, materialId);
+    }
 }

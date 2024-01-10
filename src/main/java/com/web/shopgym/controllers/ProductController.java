@@ -1,6 +1,9 @@
 package com.web.shopgym.controllers;
 
+import com.web.shopgym.dtos.ColorDTO;
+import com.web.shopgym.dtos.MaterialDTO;
 import com.web.shopgym.dtos.ProductWebShopDTO;
+import com.web.shopgym.dtos.SizeDTO;
 import com.web.shopgym.entities.*;
 import com.web.shopgym.enums.EImageType;
 import com.web.shopgym.enums.EStatus;
@@ -44,6 +47,15 @@ public class ProductController {
 
     @Autowired
     private OrderDetailService orderDetailService;
+
+    @Autowired
+    private SizeService sizeService;
+
+    @Autowired
+    private ColorService colorService;
+
+    @Autowired
+    private MaterialService materialService;
 
     @GetMapping("get-list-of-products-by-criteria")
     public DataTableResponse getListOfProductsByCriteria(DataTableRequest dataTableRequest, @RequestParam(value = "status") String status) {
@@ -201,6 +213,33 @@ public class ProductController {
     @GetMapping("get-product-by-id-web-shop/{id}")
     public Response getProductByIdWebShop(@PathVariable(value = "id") String id) {
         Product product = this.productService.getById(id);
+        List<String> listSizeId = this.sizeService.getAllByProductId(product.getId());
+        List<SizeDTO> sizes = new ArrayList<>();
+        if(listSizeId.size() > 0) {
+            listSizeId.forEach(sizeId -> {
+                SizeDTO size = SizeDTO.toDto(this.sizeService.findById(sizeId).get());
+                size.setIsOutOfStock(this.sizeService.getProductInStock(product.getId(), size.getId()).size() > 0 ? false : true);
+                sizes.add(size);
+            });
+        }
+        List<String> listColorId = this.colorService.getAllByProductId(product.getId());
+        List<ColorDTO> colors = new ArrayList<>();
+        if(listColorId.size() > 0) {
+            listColorId.forEach(colorId -> {
+                ColorDTO color = ColorDTO.toDto(this.colorService.findById(colorId).get());
+                color.setIsOutOfStock(this.colorService.getProductInStock(product.getId(), color.getId()).size() > 0 ? false : true);
+                colors.add(color);
+            });
+        }
+        List<String> listMaterialId = this.materialService.getAllByProductId(product.getId());
+        List<MaterialDTO> materials = new ArrayList<>();
+        if(listMaterialId.size() > 0) {
+            listMaterialId.forEach(materialId -> {
+                MaterialDTO material = MaterialDTO.toDto(this.materialService.findById(materialId).get());
+                material.setIsOutOfStock(this.materialService.getProductInStock(product.getId(), material.getId()).size() > 0 ? false : true);
+                materials.add(material);
+            });
+        }
         return Response.build().ok().data(ProductWebShopDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -215,6 +254,9 @@ public class ProductController {
                 .status(product.getStatus())
                 .quantityOfProductAvailable(this.productDetailService.getQuantityOfProductAvailable(product.getId()))
                 .listImage(this.imageService.findAllBySecondaryIdAndType(product.getId(), EImageType.PRODUCT).stream().map(Image::getUrl).toList())
+                .colors(colors)
+                .sizes(sizes)
+                .materials(materials)
                 .build());
     }
 }

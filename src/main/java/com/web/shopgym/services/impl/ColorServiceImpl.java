@@ -56,4 +56,14 @@ public class ColorServiceImpl implements ColorService {
     public Color save(Color color) {
         return this.colorRepository.save(color);
     }
+
+    @Override
+    public List<String> getAllByProductId(String productId) {
+        return this.colorRepository.getAllByProductId(productId);
+    }
+
+    @Override
+    public List<Color> getProductInStock(String productId, String colorId) {
+        return this.colorRepository.getProductInStock(productId, colorId);
+    }
 }

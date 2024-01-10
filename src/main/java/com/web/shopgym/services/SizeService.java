@@ -16,4 +16,8 @@ public interface SizeService {
     Optional<Size> findById(String id);
 
     Size save(Size size);
+
+    List<String> getAllByProductId(String productId);
+
+    List<Size> getProductInStock(String productId, String sizeId);
 }

@@ -30,4 +30,7 @@ public class ProductWebShopDTO {
     private EStatus status;
     private Integer quantityOfProductAvailable;
     private List<String> listImage;
+    private List<SizeDTO> sizes;
+    private List<ColorDTO> colors;
+    private List<MaterialDTO> materials;
 }

@@ -72,14 +72,14 @@
         <div>
           <el-row :gutter="5">
             <el-col :span="6" v-for="p in listOfProducts" :key="p.id">
-              <div style="background-color: #fff; padding: 20px; cursor: pointer; margin-bottom: 5px;" class="card-product" @click="showProduct(p.id)">
+              <div style="border-radius: 2px; background-color: #fff; padding: 20px; cursor: pointer; margin-bottom: 5px;" class="card-product" @click="showProduct(p.id)">
                 <el-image
                   class="image-product-web-shop"
                   style="width: 100%"
                   :src="p.image">
                 </el-image>
                 <div style="margin-top: 10px;">{{ p.name }}</div>
-                <div style="margin-top: 10px; font-weight: 400; font-size: 18px; color: rgb(20, 53, 195);">{{ formatCurrenyVND(p.price) }}</div>
+                <div style="margin-top: 10px; font-weight: 400; font-size: 18px; color: #ee4d2d;">{{ formatCurrenyVND(p.price) }}</div>
                 <div style="margin-top: 10px; display: flex; justify-content: space-between;">
                   <el-rate
                     v-model="p.rate"
@@ -216,7 +216,7 @@ export default {
 .filter {
   background-color: #fff;
   padding: 0 10px 10px 10px;
-  border-radius: 5px;
+  border-radius: 2px;
 }
 </style>
 <style>

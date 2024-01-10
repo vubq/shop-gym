@@ -16,4 +16,8 @@ public interface ColorService {
     Optional<Color> findById(String id);
 
     Color save(Color color);
+
+    List<String> getAllByProductId(String productId);
+
+    List<Color> getProductInStock(String productId, String colorId);
 }
