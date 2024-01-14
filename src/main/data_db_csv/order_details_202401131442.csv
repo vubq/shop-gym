@@ -1,0 +1,2 @@
+"is_voucher","product_price","quantity","total_amount","created_at","id","order_id","product_detail_id","status"
+0,99000.0,14,1386000.0,"2024-01-09 22:34:24",f365984a-9613-44fc-9863-8fcc794759c6,"8051cec9-b583-414b-9182-52b1b06d43b9","80f68190-1682-40f1-8fe9-08e82430b70b",ACTIVE

@@ -39,8 +39,8 @@ public class Feedback {
     private User createdBy;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "product_detail_id", nullable = false)
+    private ProductDetail productDetail;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

@@ -1,5 +1,6 @@
 package com.web.shopgym.services;
 
+import com.web.shopgym.dtos.FilterProductAttributeDTO;
 import com.web.shopgym.entities.Product;
 import com.web.shopgym.entities.ProductDetail;
 import com.web.shopgym.payloads.request.DataTableRequest;
@@ -38,4 +39,8 @@ public interface ProductDetailService {
     List<ProductDetail> saveAll(List<ProductDetail> productDetails);
 
     Integer getQuantityOfProductAvailable(String productId);
+
+    List<ProductDetail> filterProductAttributes(FilterProductAttributeDTO filterProductAttributeDTO);
+
+    ProductDetail getProductDetailByAttributes(String productId, String sizeId, String colorId, String materialId);
 }

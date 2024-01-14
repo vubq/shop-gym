@@ -1,5 +1,7 @@
 package com.web.shopgym.services.impl;
 
+import com.cloudinary.utils.StringUtils;
+import com.web.shopgym.dtos.FilterProductAttributeDTO;
 import com.web.shopgym.entities.*;
 import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.repositories.ProductDetailRepository;
@@ -79,6 +81,35 @@ public class ProductDetailServiceImpl implements ProductDetailService {
             }
         };
         return this.productDetailRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public List<ProductDetail> filterProductAttributes(FilterProductAttributeDTO filter) {
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("product").get("id"), filter.getProductId())));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThan(root.get("quantity"), 0)));
+                if(!StringUtils.isEmpty(filter.getSizeId())) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("size").get("id"), filter.getSizeId())));
+                }
+                if(!StringUtils.isEmpty(filter.getColorId())) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("color").get("id"), filter.getColorId())));
+                }
+                if(!StringUtils.isEmpty(filter.getMaterialId())) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("material").get("id"), filter.getMaterialId())));
+                }
+                query.where(predicates.toArray(new Predicate[]{}));
+                return null;
+            }
+        };
+        return this.productDetailRepository.findAll(specification);
+    }
+
+    @Override
+    public ProductDetail getProductDetailByAttributes(String productId, String sizeId, String colorId, String materialId) {
+        return this.productDetailRepository.getProductDetailByAttributes(productId, sizeId, colorId, materialId);
     }
 
     @Override

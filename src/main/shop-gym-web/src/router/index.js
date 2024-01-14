@@ -59,6 +59,16 @@ export const constantRouterMap = [
         name: 'product',
         component: () => import('@/views/web-shop/product'),
         params: true
+      },
+      {
+        path: 'pay',
+        name: 'pay',
+        component: () => import('@/views/web-shop/pay')
+      },
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/web-shop/user')
       }
     ]
   },

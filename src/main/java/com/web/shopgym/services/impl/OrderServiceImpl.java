@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,5 +69,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Optional<Order> findById(String id) {
         return this.orderRepository.findById(id);
+    }
+
+    @Override
+    public List<Order> getAllOrderWaitForConfirmationByUserId(String userId) {
+        return this.orderRepository.getAllOrderWaitForConfirmationByUserId(userId);
+    }
+
+    @Override
+    public List<Order> getAllOrderCancelledByUserId(String userId) {
+        return this.orderRepository.getAllOrderCancelledByUserId(userId);
+    }
+
+    @Override
+    public List<Order> getAllOrderSuccessByUserId(String userId) {
+        return this.orderRepository.getAllOrderSuccessByUserId(userId);
     }
 }

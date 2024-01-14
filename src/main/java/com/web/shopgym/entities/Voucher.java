@@ -34,6 +34,9 @@ public class Voucher {
     @Column(name = "value")
     private Double value;
 
+    @Column(name = "quantity")
+    private Integer quantity;
+
     @Column(name = "start_date")
     private Date startDate;
 

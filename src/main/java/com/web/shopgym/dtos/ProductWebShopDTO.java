@@ -33,4 +33,5 @@ public class ProductWebShopDTO {
     private List<SizeDTO> sizes;
     private List<ColorDTO> colors;
     private List<MaterialDTO> materials;
+    private Integer totalProductsAvailable;
 }

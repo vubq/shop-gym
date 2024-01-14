@@ -72,22 +72,25 @@
         <div>
           <el-row :gutter="5">
             <el-col :span="6" v-for="p in listOfProducts" :key="p.id">
-              <div style="border-radius: 2px; background-color: #fff; padding: 20px; cursor: pointer; margin-bottom: 5px;" class="card-product" @click="showProduct(p.id)">
+              <div style="height: 100%; display: flex; flex-direction: column; flex: 1; height: 400px; border-radius: 2px; background-color: #fff; padding: 20px; cursor: pointer; margin-bottom: 5px;" class="card-product" @click="showProduct(p.id)">
                 <el-image
                   class="image-product-web-shop"
                   style="width: 100%"
                   :src="p.image">
                 </el-image>
-                <div style="margin-top: 10px;">{{ p.name }}</div>
-                <div style="margin-top: 10px; font-weight: 400; font-size: 18px; color: #ee4d2d;">{{ formatCurrenyVND(p.price) }}</div>
-                <div style="margin-top: 10px; display: flex; justify-content: space-between;">
-                  <el-rate
-                    v-model="p.rate"
-                    :colors="colors"
-                    disabled>
-                  </el-rate>
-                  <div>
-                    Đã bán {{ p.quantitySold }}
+                <div></div>
+                <div style="margin-top: auto;">
+                  <div style="margin-top: 10px;">{{ p.name }}</div>
+                  <div style="margin-top: 10px; font-weight: 400; font-size: 18px; color: #ee4d2d;">{{ formatCurrenyVND(p.price) }}</div>
+                  <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+                    <el-rate
+                      v-model="p.rate"
+                      :colors="colors"
+                      disabled>
+                    </el-rate>
+                    <div>
+                      Đã bán {{ p.quantitySold }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -208,7 +211,7 @@ export default {
   border: 1px solid #fff;
 }
 .card-product:hover {
-  border-color: rgb(20, 53, 195);
+  border-color: #ee4d2d;
 }
 .el-collapse {
   border-top: 0;

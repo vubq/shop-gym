@@ -15,6 +15,8 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, St
 
     Page<ProductDetail> findAll(Specification<ProductDetail> spec, Pageable pageable);
 
+    List<ProductDetail> findAll(Specification<ProductDetail> spec);
+
     @Query(value = "SELECT pd FROM ProductDetail pd WHERE pd.product.id = :productId")
     List<ProductDetail> findAllByProductId(String productId);
 
@@ -41,4 +43,11 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, St
 
     @Query(value = "SELECT SUM(pd.quantity) FROM ProductDetail pd WHERE pd.product.id = :productId")
     Integer getQuantityOfProductAvailable(String productId);
+
+    @Query(value = "SELECT pd FROM ProductDetail pd " +
+            "WHERE pd.product.id = :productId " +
+            "AND pd.size.id = :sizeId " +
+            "AND pd.color.id = :colorId " +
+            "AND pd.material.id = :materialId")
+    ProductDetail getProductDetailByAttributes(String productId, String sizeId, String colorId, String materialId);
 }

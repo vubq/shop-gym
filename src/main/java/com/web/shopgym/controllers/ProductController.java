@@ -1,9 +1,6 @@
 package com.web.shopgym.controllers;
 
-import com.web.shopgym.dtos.ColorDTO;
-import com.web.shopgym.dtos.MaterialDTO;
-import com.web.shopgym.dtos.ProductWebShopDTO;
-import com.web.shopgym.dtos.SizeDTO;
+import com.web.shopgym.dtos.*;
 import com.web.shopgym.entities.*;
 import com.web.shopgym.enums.EImageType;
 import com.web.shopgym.enums.EStatus;
@@ -240,6 +237,12 @@ public class ProductController {
                 materials.add(material);
             });
         }
+        FilterProductAttributeDTO filter = FilterProductAttributeDTO.builder().productId(product.getId()).build();
+        List<ProductDetail> productDetails = this.productDetailService.filterProductAttributes(filter);
+        Integer totalProductsAvailable = 0;
+        for (ProductDetail productDetail : productDetails) {
+            totalProductsAvailable += productDetail.getQuantity();
+        }
         return Response.build().ok().data(ProductWebShopDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -257,6 +260,7 @@ public class ProductController {
                 .colors(colors)
                 .sizes(sizes)
                 .materials(materials)
+                .totalProductsAvailable(totalProductsAvailable)
                 .build());
     }
 }
