@@ -9,6 +9,7 @@ import com.web.shopgym.payloads.request.DataTableRequest;
 import com.web.shopgym.payloads.request.OrderDto;
 import com.web.shopgym.payloads.response.DataTableResponse;
 import com.web.shopgym.payloads.response.Response;
+import com.web.shopgym.searchForm.OrderSearchForm;
 import com.web.shopgym.services.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,39 @@ public class OrderController {
                 .ok()
                 .totalRows(result.getTotalElements())
                 .items(result.get().toList());
+    }
+
+    @PostMapping("get-list-of-orders-by-criteria")
+    public DataTableResponse getListOfOrdersByCriteria(DataTableRequest request, @RequestBody OrderSearchForm orderSearchForm) {
+        Page<Order> result = this.orderService.getListOfOrdersByCriteria(request, orderSearchForm);
+        List<OrderByUserDTO> orderByUser = new ArrayList<>();
+        result.getContent().forEach(order -> {
+            orderByUser.add(OrderByUserDTO.builder()
+                    .id(order.getId())
+                    .type(order.getType())
+                    .fullNameCustomer(order.getFullNameCustomer())
+                    .phoneNumber(order.getPhoneNumber())
+                    .address(order.getAddress())
+                    .email(order.getEmail())
+                    .createdBy(order.getCreatedBy())
+                    .createdAt(order.getCreatedAt())
+                    .completedAt(order.getCompletedAt())
+                    .totalAmount(order.getTotalAmount())
+                    .voucherId(order.getVoucherId())
+                    .noteByCustomer(order.getNoteByCustomer())
+                    .city(order.getCity())
+                    .district(order.getDistrict())
+                    .ward(order.getWard())
+                    .noteByAdmin(order.getNoteByAdmin())
+                    .paymentType(order.getPaymentType())
+                    .status(order.getStatus())
+                    .orderDetails(this.orderDetailService.getListOfOrderDetailsByOrderId(order.getId()))
+                    .build());
+        });
+        return DataTableResponse.build()
+                .ok()
+                .totalRows(result.getTotalElements())
+                .items(orderByUser);
     }
 
     @GetMapping("get-order-details-by-order-id/{orderId}")
@@ -286,5 +320,61 @@ public class OrderController {
                     .build());
         });
         return Response.build().ok().data(orderByUser);
+    }
+
+    @GetMapping("/get-all-order-by-user-id/{userId}")
+    public Response getAllOrderByUserId(@PathVariable String userId) {
+        List<Order> orders = this.orderService.getAllOrderByUserId(userId);
+        List<OrderByUserDTO> orderByUser = new ArrayList<>();
+        orders.forEach(order -> {
+            orderByUser.add(OrderByUserDTO.builder()
+                    .id(order.getId())
+                    .type(order.getType())
+                    .fullNameCustomer(order.getFullNameCustomer())
+                    .phoneNumber(order.getPhoneNumber())
+                    .address(order.getAddress())
+                    .email(order.getEmail())
+                    .createdBy(order.getCreatedBy())
+                    .createdAt(order.getCreatedAt())
+                    .completedAt(order.getCompletedAt())
+                    .totalAmount(order.getTotalAmount())
+                    .voucherId(order.getVoucherId())
+                    .noteByCustomer(order.getNoteByCustomer())
+                    .city(order.getCity())
+                    .district(order.getDistrict())
+                    .ward(order.getWard())
+                    .noteByAdmin(order.getNoteByAdmin())
+                    .paymentType(order.getPaymentType())
+                    .status(order.getStatus())
+                    .orderDetails(this.orderDetailService.getListOfOrderDetailsByOrderId(order.getId()))
+                    .build());
+        });
+        return Response.build().ok().data(orderByUser);
+    }
+
+    @GetMapping("update-order")
+    public Response updateOrder(@RequestParam(value = "orderId") String orderId, @RequestParam(value = "action") String action) {
+        Order order = this.orderService.findById(orderId).get();
+        if(action.equals("xacnhan")) {
+            order.setStatus(EOrderStatus.PREPARING_GOODS);
+            this.orderService.save(order);
+        }
+        if(action.equals("dagui")) {
+            order.setStatus(EOrderStatus.DELIVERING);
+            this.orderService.save(order);
+        }
+        if(action.equals("dagiao")) {
+            order.setStatus(EOrderStatus.DELIVERED);
+            this.orderService.save(order);
+        }
+        if(action.equals("huy")) {
+            order.setStatus(EOrderStatus.CANCELLED);
+            this.orderService.save(order);
+        }
+        if(action.equals("nhanhang")) {
+            order.setStatus(EOrderStatus.SUCCESS);
+            this.orderService.save(order);
+        }
+        return Response.build().ok();
     }
 }

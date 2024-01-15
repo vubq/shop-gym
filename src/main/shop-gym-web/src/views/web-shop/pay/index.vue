@@ -181,6 +181,7 @@ import { createOrder } from '../../../api/order'
 import moment from 'moment'
 import { mapGetters, mapActions } from 'vuex'
 import axios from 'axios'
+import { paymentOnline } from '../../../api/payment'
 
 export default {
   components: {
@@ -203,13 +204,15 @@ export default {
       address: '',
       email: '',
       voucherId: '',
-      noteByCustomer: ''
+      noteByCustomer: '',
+      paymentOnlineCode: ''
     }
   },
   computed: {
     ...mapGetters([
       'cart',
-      'allInfor'
+      'allInfor',
+      'pay'
     ])
   },
   watch: {
@@ -221,6 +224,7 @@ export default {
           }
         })
       this.city = this.listCity.find(e => e.code === this.cityCode).name
+      this.changePay()
     },
     districtCode: function() {
       axios.get('https://provinces.open-api.vn/api/d/' + this.districtCode + '?depth=2')
@@ -230,17 +234,42 @@ export default {
           }
         })
       this.district = this.listDistrict.find(e => e.code === this.districtCode).name
+      this.changePay()
     },
     wardCode: function() {
       this.ward = this.listWard.find(e => e.code === this.wardCode).name
+      this.changePay()
     },
     cart: function() {
       this.getListProductDetail()
+      this.changePay()
+    },
+    typePay: function() {
+      this.changePay()
+    },
+    fullNameCustomer: function() {
+      this.changePay()
+    },
+    phoneNumber: function() {
+      this.changePay()
+    },
+    address: function() {
+      this.changePay()
+    },
+    email: function() {
+      this.changePay()
+    },
+    voucherId: function() {
+      this.changePay()
+    },
+    noteByCustomer: function() {
+      this.changePay()
     }
   },
   methods: {
     ...mapActions([
-      'clearCart'
+      'clearCart',
+      'setPay'
     ]),
     formatCurrenyVND_d(value) {
       return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value)
@@ -281,7 +310,48 @@ export default {
       }
     },
     payment() {
-      createOrder({
+      if(this.typePay === 'PAYMENT_ONLINE') {
+        paymentOnline({
+          id: this.allInfor.id,
+          money: this.genTotalMoney(),
+          bankCode: '',
+          billMobile: this.phoneNumber,
+          billEmail: this.email,
+          fullname: this.fullNameCustomer,
+          billAddress: this.address,
+          billCity: '',
+          billCountry: '',
+          billState: ''
+        }).then(res => {
+          if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
+            window.location.replace(res.data.data)
+          }
+        })
+      } else {
+        createOrder({
+          city: this.city,
+          district: this.district,
+          ward: this.ward,
+          paymentType: this.typePay,
+          fullNameCustomer: this.fullNameCustomer,
+          phoneNumber: this.phoneNumber,
+          address: this.address,
+          voucherId: this.voucherId,
+          noteByCustomer: this.noteByCustomer,
+          totalAmount: this.genTotalMoney(),
+          createdBy: this.allInfor.id,
+          orderDetails: this.cart,
+          email: this.email
+        }).then(res => {
+          if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
+            this.clearCart()
+            this.$router.push('/user')
+          }
+        })
+      }
+    },
+    changePay() {
+      this.setPay({
         city: this.city,
         district: this.district,
         ward: this.ward,
@@ -295,10 +365,6 @@ export default {
         createdBy: this.allInfor.id,
         orderDetails: this.cart,
         email: this.email
-      }).then(res => {
-        if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
-          this.clearCart()
-        }
       })
     }
   },
@@ -311,6 +377,14 @@ export default {
       })
     if(this.cart.length > 0) {
       this.getListProductDetail()
+    }
+    if(new URL(window.location.href).searchParams.get('vnp_ResponseCode') === '00') {
+      createOrder(this.pay).then(res => {
+        if(res.data && res.data.code === ResponseCode.CODE_SUCCESS) {
+          this.clearCart()
+          this.$router.push('/user')
+        }
+      })
     }
   }
 }

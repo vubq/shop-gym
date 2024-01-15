@@ -42,13 +42,13 @@ export const constantRouterMap = [
     path: '/',
     hidden: true,
     component: LayoutWebShop,
-    redirect: '/home',
+    redirect: '/filter-product',
     children: [
-      {
-        path: 'home',
-        name: 'home',
-        component: () => import('@/views/web-shop/home')
-      },
+      // {
+      //   path: 'home',
+      //   name: 'home',
+      //   component: () => import('@/views/web-shop/home')
+      // },
       {
         path: 'filter-product',
         name: 'filter-product',
@@ -204,7 +204,15 @@ export const constantRouterMap = [
         name: 'order.order-at-the-shop',
         component: () => import('@/views/manage-system/order-at-the-shop'),
         meta: {
-          icon: 's-home', title: 'Hóa đơn tại quầy'
+          icon: 's-home', title: 'Tại quầy'
+        }
+      },
+      {
+        path: 'order',
+        name: 'order.order',
+        component: () => import('@/views/manage-system/order'),
+        meta: {
+          icon: 's-home', title: 'Online'
         }
       }
     ]

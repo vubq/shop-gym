@@ -4,7 +4,7 @@
       mode="horizontal" 
       text-color="#fff"
       active-text-color="#fff">
-      <router-link to="/home" style="display: flex;">
+      <router-link to="/" style="display: flex;">
         <div style="padding: 10px 0px 10px 20px;">
           <el-image src="../../../static/image/logo/logo.jpg" style="width: 32.7px; border-radius: 4px;"></el-image>
         </div>
@@ -31,7 +31,7 @@
             </div>
           </div>
           <el-dropdown-menu class="user-dropdown" slot="dropdown">
-            <router-link class='inlineBlock' to="/user/profile">
+            <!-- <router-link class='inlineBlock' to="/user/profile">
               <el-dropdown-item>
                 {{$t('navbar.profile')}}
               </el-dropdown-item>
@@ -40,7 +40,7 @@
               <el-dropdown-item>
                 {{$t('navbar.github')}}
               </el-dropdown-item>
-            </a>
+            </a> -->
             <el-dropdown-item @click.native="logout">
               <span style="display:block;">{{$t('navbar.logOut')}}</span>
             </el-dropdown-item>

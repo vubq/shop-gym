@@ -3,10 +3,26 @@ import { saveToLocal, loadFromLocal } from '@/common/local-storage'
 const ADD_PRODUCT_TO_CART = 'ADD_PRODUCT_TO_CART'
 const REMOVE_PRODUCT_TO_CART = 'REMOVE_PRODUCT_TO_CART'
 const CLEAR_CART = 'CLEAR_CART'
+const SET_PAY = 'SET_PAY'
 
 const cart = {
   state: {
-    cart: loadFromLocal('cart', '') || []
+    cart: loadFromLocal('cart', '') || [],
+    pay: loadFromLocal('pay', '') || {
+      city: '',
+      district: '',
+      ward: '',
+      paymentType: '',
+      fullNameCustomer: '',
+      phoneNumber: '',
+      address: '',
+      voucherId: '',
+      noteByCustomer: '',
+      totalAmount: '',
+      email: '',
+      createdBy: '',
+      orderDetails: null
+    }
   },
   mutations: {
     [ADD_PRODUCT_TO_CART](state, productDetail) {
@@ -27,6 +43,26 @@ const cart = {
     [CLEAR_CART](state) {
       state.cart = []
       saveToLocal('cart', state.cart)
+      state.pay = {
+        city: '',
+        district: '',
+        ward: '',
+        paymentType: '',
+        fullNameCustomer: '',
+        phoneNumber: '',
+        address: '',
+        voucherId: '',
+        noteByCustomer: '',
+        totalAmount: '',
+        email: '',
+        createdBy: '',
+        orderDetails: null
+      }
+      saveToLocal('pay', state.pay)
+    },
+    [SET_PAY](state, pay) {
+      state.pay = pay
+      saveToLocal('pay', state.pay)
     }
   },
   actions: {
@@ -47,10 +83,17 @@ const cart = {
         commit(CLEAR_CART)
         return resolve()
       })
+    },
+    setPay({ commit }, pay) {
+      return new Promise((resolve, reject) => {
+        commit(SET_PAY, pay)
+        return resolve()
+      })
     }
   },
   getters: {
-    cart: state => state.cart
+    cart: state => state.cart,
+    pay: state => state.pay
   }
 }
 

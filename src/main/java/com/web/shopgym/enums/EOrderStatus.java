@@ -6,7 +6,9 @@ public enum EOrderStatus {
     PREPARING_GOODS, // Đang chuẩn bị hàng
     SHIPPED, // Đã gửi hàng
     DELIVERING, // Đang giao
-    DELIVERED, // Đã gia
+    DELIVERED, // Đã giao
     SUCCESS, // Thành công
     CANCELLED // Hủy
+
+
 }

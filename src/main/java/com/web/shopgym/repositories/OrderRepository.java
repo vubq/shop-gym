@@ -21,4 +21,7 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
     @Query(value = "SELECT o FROM Order o WHERE o.createdBy.id = :userId AND o.status = com.web.shopgym.enums.EOrderStatus.CANCELLED")
     List<Order> getAllOrderCancelledByUserId(String userId);
+
+    @Query(value = "SELECT o FROM Order o WHERE o.createdBy.id = :userId")
+    List<Order> getAllOrderByUserId(String userId);
 }

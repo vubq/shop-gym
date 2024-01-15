@@ -5,7 +5,7 @@
       text-color="#fff"
       active-text-color="#fff">
       <div style="display: flex; align-items: center;">
-        <router-link to="/home" >
+        <router-link to="/" >
           <div>
             <el-image src="../../../static/image/logo/logo-web-shop.jpg" style="width: 120px; border-radius: 4px;"></el-image>
           </div>
@@ -119,16 +119,11 @@
             </div>
           </div>
           <el-dropdown-menu class="user-dropdown" slot="dropdown">
-            <router-link class='inlineBlock' to="/user/profile">
+            <router-link class='inlineBlock' to="/user">
               <el-dropdown-item>
-                {{$t('navbar.profile')}}
+                Giỏ hàng
               </el-dropdown-item>
             </router-link>
-            <a target='_blank' href="https://github.com/Neveryu/vue-cms">
-              <el-dropdown-item>
-                {{$t('navbar.github')}}
-              </el-dropdown-item>
-            </a>
             <el-dropdown-item @click.native="logout">
               <span style="display:block;">{{$t('navbar.logOut')}}</span>
             </el-dropdown-item>

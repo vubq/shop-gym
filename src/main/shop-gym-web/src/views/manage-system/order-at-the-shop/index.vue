@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h3>Quản lý hóa đơn</h3>
+    <h3>Quản lý hóa đơn tại quầy</h3>
 
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
       <div>

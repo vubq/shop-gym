@@ -23,6 +23,14 @@ export const getListOfOrdersByCriteriaSellAtTheShop = (params) =>
     params
   })
 
+export const getListOfOrdersByCriteria = (params, data) =>
+  request({
+    url: ENV + '/get-list-of-orders-by-criteria',
+    method: 'post',
+    params,
+    data
+  })
+
 export const getOrderDetailsByOrderId = (orderId) =>
   request({
     url: ENV + '/get-order-details-by-order-id/' + orderId,
@@ -45,4 +53,17 @@ export const getAllOrderCancelledByUserId = (userId) =>
   request({
     url: ENV + '/get-all-order-cancelled-by-user-id/' + userId,
     method: 'get'
+  })
+
+export const getAllOrderByUserId = (userId) =>
+  request({
+    url: ENV + '/get-all-order-by-user-id/' + userId,
+    method: 'get'
+  })
+
+export const updateOrder = (params) =>
+  request({
+    url: ENV + '/update-order',
+    method: 'get',
+    params
   })
